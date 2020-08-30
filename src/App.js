@@ -1,7 +1,10 @@
 import React from 'react'
+import TimecodeTracker from './components/TimecodeTracker/TimecodeTracker'
 
-function App() {
-  return <h1>Hello World!</h1>
+export default function App() {
+  return (
+    <div>
+      <TimecodeTracker />
+    </div>
+  )
 }
-
-export default App
