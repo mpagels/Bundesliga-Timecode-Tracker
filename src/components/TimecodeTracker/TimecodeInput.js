@@ -6,13 +6,14 @@ export default function TimecodeCard({ title, index, onChange }) {
     <InputContainer>
       <Label htmlFor={index}>{title}</Label>
       <br />
-      <input
-        onChange={(event) => onChange(event, index)}
-        type="number"
-        pattern="[0-9]{10}"
-        id={index}
-        name="timecode"
-      ></input>
+      <InputWrapper>
+        <input
+          onChange={(event) => onChange(event, index)}
+          type="number"
+          id={index}
+          name="timecode"
+        ></input>
+      </InputWrapper>
     </InputContainer>
   )
 }
@@ -30,4 +31,9 @@ const InputContainer = styled.div`
 const Label = styled.label`
   display: inline-block;
   margin: 10px;
+`
+
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `
