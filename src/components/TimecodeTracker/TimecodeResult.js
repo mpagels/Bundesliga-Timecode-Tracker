@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components/macro'
+import PropTypes from 'prop-types'
 
 export default function TimecodeResult({ text, result }) {
   return (
@@ -22,3 +23,8 @@ const ResultHeader = styled.h4`
 const Result = styled.p`
   margin: 0;
 `
+
+TimecodeResult.propTypes = {
+  text: PropTypes.string,
+  result: PropTypes.string,
+}

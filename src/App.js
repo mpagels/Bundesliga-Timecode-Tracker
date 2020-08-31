@@ -4,13 +4,13 @@ import styled from 'styled-components'
 
 export default function App() {
   return (
-    <div>
+    <>
       <AppTitle>Timecode Tracker</AppTitle>
       <TimecodeTracker />
-    </div>
+    </>
   )
 }
 
-const AppTitle = styled.h2`
+const AppTitle = styled.h1`
   text-align: center;
 `

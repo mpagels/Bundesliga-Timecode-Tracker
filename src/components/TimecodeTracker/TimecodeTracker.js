@@ -11,13 +11,13 @@ export default function TimecodeTracker() {
 
   return (
     <>
-      <form onKeyDown={handleEnter}>
+      <form onKeyDown={handleOnEnter}>
         {timecodes.map((_, index) => (
           <TimecodeInput
             title={index < 2 ? 'Halbzeit ' + (index + 1) : 'O-Töne'}
             index={index}
             key={index}
-            onChange={handleChange}
+            onChange={handleOnChange}
           />
         ))}
       </form>
@@ -32,15 +32,15 @@ export default function TimecodeTracker() {
     </>
   )
 
-  function handleChange(event, index) {
+  function handleOnChange(event, index) {
     const value = event.target.value
     const oldTimecodes = [...timecodes]
     oldTimecodes[index] = value
     setTimecodes(oldTimecodes)
   }
 
-  function handleEnter(event) {
-    if (event.keyCode === 13) {
+  function handleOnEnter(event) {
+    if (event.key === 'Enter') {
       const form = event.target.form
       const index = Array.prototype.indexOf.call(form, event.target)
       index <= 1 ? form.elements[index + 1].focus() : form.elements[0].focus()
