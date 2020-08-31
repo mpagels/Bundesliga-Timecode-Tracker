@@ -7,7 +7,7 @@ import TimecodeInput from './TimecodeInput'
 import TimecodeResult from './TimecodeResult'
 
 export default function TimecodeTracker() {
-  const [timecodes, setTimecodes] = useState([[], [], []])
+  const [timecodes, setTimecodes] = useState(['', '', ''])
 
   return (
     <>
