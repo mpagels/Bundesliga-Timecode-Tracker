@@ -32,8 +32,7 @@ export default function TimecodeTracker() {
     </>
   )
 
-  function handleOnChange(event, index) {
-    const value = event.target.value
+  function handleOnChange(value, index) {
     const oldTimecodes = [...timecodes]
     oldTimecodes[index] = value
     setTimecodes(oldTimecodes)
