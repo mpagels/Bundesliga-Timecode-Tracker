@@ -1,7 +1,16 @@
 import React from 'react'
+import TimecodeTracker from './components/TimecodeTracker/TimecodeTracker'
+import styled from 'styled-components'
 
-function App() {
-  return <h1>Hello World!</h1>
+export default function App() {
+  return (
+    <>
+      <AppTitle>Timecode Tracker</AppTitle>
+      <TimecodeTracker />
+    </>
+  )
 }
 
-export default App
+const AppTitle = styled.h1`
+  text-align: center;
+`
