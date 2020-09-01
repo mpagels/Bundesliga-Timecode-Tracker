@@ -141,5 +141,7 @@ export function getTimecodeTotalLengthFromSequenceCards(SequenceCards) {
 }
 
 export function getFormatedTimecode(timecodeAsString) {
-  return TimecodeCalculator.format(timecodeAsString)
+  TimecodeCalculator.reset()
+  TimecodeCalculator.add(timecodeAsString)
+  return TimecodeCalculator.getResult()
 }

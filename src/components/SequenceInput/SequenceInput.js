@@ -1,19 +1,36 @@
 import React from 'react'
 import styled from 'styled-components/macro'
 import TimecodeInput from '../TimecodeTracker/TimecodeInput'
+import PropTypes from 'prop-types'
+
+SequenceInput.propTypes = {
+  hasDescription: PropTypes.bool,
+  hasTimeCode: PropTypes.bool,
+  inputValue: PropTypes.string,
+  isEmpty: PropTypes.bool,
+  onChange: PropTypes.func,
+  onDeleteClick: PropTypes.func,
+  onSaveClick: PropTypes.func,
+  setHasDescription: PropTypes.func,
+}
 
 export default function SequenceInput({
-  onSaveClick,
-  isEmpty,
   hasDescription,
   hasTimeCode,
+  inputValue,
+  isEmpty,
+  onChange,
   onDeleteClick,
-  onKeyDown,
+  onSaveClick,
+  setHasDescription,
 }) {
   return (
     <Wrapper isEmpty={isEmpty}>
       <form onSubmit={onSaveClick}>
         <Szenenbeschreibung
+          onChange={(event) =>
+            event.target.value.length > 0 && setHasDescription(true)
+          }
           placeholder="Neue Szene hinzufügen"
           name="description"
         ></Szenenbeschreibung>
@@ -22,7 +39,11 @@ export default function SequenceInput({
         ) : (
           <Info hasDescription={hasDescription}>_</Info>
         )}
-        <TimecodeInput title="Szenenlänge" onKeyDown={onKeyDown} />
+        <TimecodeInput
+          title="Szenenlänge"
+          inputValue={inputValue}
+          onChange={onChange}
+        />
         {isEmpty && !hasTimeCode ? (
           <Info>Timecode fehlt oder Fehlerhaft</Info>
         ) : (
@@ -51,6 +72,7 @@ const Szenenbeschreibung = styled.textarea`
   width: 100%;
   height: 100px;
   padding: 10px;
+  font-size: 130%;
   background-color: #e0e0e0;
   border: none;
   box-shadow: inset 0 0 3px 1px #b8b8b8;
@@ -67,6 +89,7 @@ const Button = styled.button`
   all: unset;
   padding: 10px;
   border-radius: 10px;
+  font-weight: 800;
   margin: 10px;
   cursor: pointer;
   width: 100%;

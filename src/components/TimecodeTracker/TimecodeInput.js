@@ -1,41 +1,31 @@
-import React, { useState } from 'react'
-import styled from 'styled-components/macro'
 import PropTypes from 'prop-types'
+import React from 'react'
+import styled from 'styled-components/macro'
 
 TimecodeInput.propTypes = {
   title: PropTypes.string,
   index: PropTypes.number,
+  inputValue: PropTypes.string,
   onChange: PropTypes.func,
 }
 
-export default function TimecodeInput({ title, index, onChange }) {
-  const [value, setValue] = useState('')
-
+export default function TimecodeInput({ title, index, inputValue, onChange }) {
   return (
     <InputContainer>
       <Label htmlFor={index}>{title}</Label>
       <br />
       <InputWrapper>
-        <NumberInput
-          onChange={(event) => handleOnChange(event, index, onChange)}
+        <Input
+          onChange={onChange}
           id={index}
           name="timecode"
           type="tel"
           placeholder="043017"
-          value={value}
-        ></NumberInput>
+          value={inputValue}
+        ></Input>
       </InputWrapper>
     </InputContainer>
   )
-
-  function handleOnChange(event, index, onChange) {
-    const value = event.target.value
-    const regex = new RegExp('^[0-9]*$')
-    if (regex.test(value) && value.length < 9) {
-      setValue(value)
-      onChange(value, index)
-    }
-  }
 }
 
 const InputContainer = styled.div`
@@ -48,10 +38,9 @@ const InputContainer = styled.div`
 
 const Label = styled.label`
   display: inline-block;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
   color: #737373;
   font-size: 18px;
-  margin: 10px;
   font-size: 150%;
 `
 
@@ -61,8 +50,8 @@ const InputWrapper = styled.div`
   width: 100%;
 `
 
-const NumberInput = styled.input`
-  padding: 10px;
+const Input = styled.input`
+  padding: 20px;
   border: 0;
   font-size: 18px;
   box-shadow: inset 0 0 3px 1px #b8b8b8;
@@ -70,9 +59,9 @@ const NumberInput = styled.input`
   &:focus {
     box-shadow: inset 0 0 3px 1px black;
     outline: black;
-`
-const Input = styled.input`
-  font-size: 120%;
+  }
+
+  font-size: 150%;
   text-align: right;
-  padding: 5px;
+  padding: 15px;
 `

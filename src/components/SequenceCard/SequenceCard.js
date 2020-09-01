@@ -1,5 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
+
+SequenceCard.propTypes = {
+  description: PropTypes.string,
+  lengthTimeCode: PropTypes.string,
+}
 
 export default function SequenceCard({ description, lengthTimeCode }) {
   return (

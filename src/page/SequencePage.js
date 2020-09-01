@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import {
   getFormatedTimecode,
@@ -12,6 +12,11 @@ export default function SequencePage() {
   const [isEmpty, setIsEmpty] = useState(false)
   const [hasDescription, setHasDescription] = useState(true)
   const [hasTimeCode, setHasTimeCode] = useState(true)
+  const [inputValue, setInputValue] = useState('')
+
+  useEffect(() => {
+    hasDescription && hasTimeCode && setIsEmpty(false)
+  }, [hasDescription, hasTimeCode])
 
   return (
     <>
@@ -29,7 +34,9 @@ export default function SequencePage() {
         isEmpty={isEmpty}
         hasDescription={hasDescription}
         hasTimeCode={hasTimeCode}
-        onKeyDown={onKeyDown}
+        onChange={handleInputOnChange}
+        inputValue={inputValue}
+        setHasDescription={setHasDescription}
       />
 
       <Footer>
@@ -45,20 +52,25 @@ export default function SequencePage() {
     const form = event.target
     const description = form[0].value
     const timeCode = form[1].value
-    if (!description && !timeCode) {
+
+    const hasOnlyZeros = new RegExp('^[0]+$').test(timeCode)
+
+    if (!description?.trim() && !timeCode) {
       setIsEmpty(true)
       setHasDescription(false)
       setHasTimeCode(false)
     } else if (!description) {
       setIsEmpty(true)
       setHasDescription(false)
-    } else if (!timeCode) {
+    } else if (!timeCode || hasOnlyZeros) {
       setIsEmpty(true)
       setHasTimeCode(false)
     } else {
       setIsEmpty(false)
       setHasTimeCode(true)
       setSequenceCards([...sequenceCards, { description, timeCode }])
+      setInputValue('')
+      form[0].focus()
       form.reset()
     }
   }
@@ -67,23 +79,15 @@ export default function SequencePage() {
     setIsEmpty(false)
     setHasDescription(true)
     setHasTimeCode(true)
+    setInputValue('')
   }
 
-  function onKeyDown(event) {
-    if (
-      !(
-        (event.keyCode > 95 && event.keyCode < 106) ||
-        (event.keyCode > 47 && event.keyCode < 58) ||
-        event.key === 'Backspace' ||
-        event.keyCode === 9
-      )
-    ) {
-      setHasTimeCode(false)
-      setIsEmpty(true)
-    } else {
+  function handleInputOnChange(event) {
+    const value = event.target.value
+    const regex = new RegExp('^[0-9]*$')
+    if (regex.test(value) && value.length < 9) {
       setHasTimeCode(true)
-      setHasDescription(true)
-      setIsEmpty()
+      setInputValue(value)
     }
   }
 }
