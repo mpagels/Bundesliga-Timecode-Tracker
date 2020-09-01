@@ -109,9 +109,6 @@ const Delete = styled(Button)`
 `
 const Save = styled(Button)`
   background-color: #96bd88;
-  &:hover {
-    border: 2px solid green;
-  }
   &:focus {
     border: 2px solid green;
   }

@@ -59,7 +59,7 @@ export default function SequencePage() {
       setIsEmpty(true)
       setHasDescription(false)
       setHasTimeCode(false)
-    } else if (!description) {
+    } else if (!description || !description?.trim()) {
       setIsEmpty(true)
       setHasDescription(false)
     } else if (!timeCode || hasOnlyZeros) {
