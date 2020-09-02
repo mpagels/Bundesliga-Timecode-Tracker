@@ -12,5 +12,5 @@ export const Default = Template.bind({})
 Default.args = {
   description:
     'Schuss Leipzig Pass von Sabitzer, Werner flach links am Tor vorbei',
-  lengthTC: '00:32:15',
+  lengthTimeCode: '00:00:32:15',
 }

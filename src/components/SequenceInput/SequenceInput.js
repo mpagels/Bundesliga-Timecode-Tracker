@@ -23,6 +23,7 @@ export default function SequenceInput({
   onDeleteClick,
   onSaveClick,
   setHasDescription,
+  textAreaValue,
 }) {
   return (
     <Wrapper isEmpty={isEmpty}>
@@ -33,6 +34,7 @@ export default function SequenceInput({
           }
           placeholder="Neue Szene hinzufügen"
           name="description"
+          value={textAreaValue && textAreaValue}
         ></Szenenbeschreibung>
         {isEmpty && !hasDescription ? (
           <Info>Szenenbeschreibung fehlt</Info>

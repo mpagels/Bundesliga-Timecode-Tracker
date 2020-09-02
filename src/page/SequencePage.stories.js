@@ -2,13 +2,10 @@ import React from 'react'
 import SequencePage from './SequencePage'
 
 export default {
-  title: 'capstone/test',
+  title: 'capstone/SequencePage',
   component: SequencePage,
 }
 
-const Template = (args) => <SequencePage {...args} />
+const Template = (args) => <SequencePage />
 
-export const Test = Template.bind({})
-Test.args = {
-  title: 'test',
-}
+export const Default = Template.bind({})
