@@ -89,17 +89,17 @@ const Actions = styled.div`
 `
 const Button = styled.button`
   all: unset;
-  padding: 10px;
   border-radius: 10px;
-  font-weight: 800;
-  margin: 10px;
-  cursor: pointer;
-  width: 100%;
-  color: white;
-  box-shadow: 0 4px 8px -2px black;
-  display: flex;
-  justify-content: center;
   border: 2px solid transparent;
+  box-shadow: 0 4px 8px -2px black;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  font-weight: 800;
+  justify-content: center;
+  margin: 10px;
+  padding: 10px;
+  width: 100%;
 `
 
 const Delete = styled(Button)`
@@ -117,8 +117,10 @@ const Save = styled(Button)`
 `
 
 const Info = styled.span`
+  ${(props) =>
+    props.hasDescription || props.hasTimeCode
+      ? 'color: #e0e0e0'
+      : 'color: #cb6870'};
   font-size: 12px;
-  color: #cb6870;
-  ${(props) => (props.hasDescription || props.hasTimeCode) && 'color: #e0e0e0'};
   height: 20px;
 `

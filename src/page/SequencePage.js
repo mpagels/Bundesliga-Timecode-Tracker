@@ -22,20 +22,20 @@ export default function SequencePage() {
     <>
       {sequenceCards.map(({ description, timeCode }, index) => (
         <SequenceCard
-          key={index}
           description={description}
+          key={index}
           lengthTimeCode={getFormatedTimecode(timeCode)}
         />
       ))}
 
       <SequenceInput
-        onSaveClick={onSave}
-        onDeleteClick={onDelete}
-        isEmpty={isEmpty}
         hasDescription={hasDescription}
         hasTimeCode={hasTimeCode}
-        onChange={handleInputOnChange}
         inputValue={inputValue}
+        isEmpty={isEmpty}
+        onChange={handleInputOnChange}
+        onDeleteClick={onDelete}
+        onSaveClick={onSave}
         setHasDescription={setHasDescription}
       />
 
@@ -56,30 +56,30 @@ export default function SequencePage() {
     const hasOnlyZeros = new RegExp('^[0]+$').test(timeCode)
 
     if (!description?.trim() && !timeCode) {
-      setIsEmpty(true)
       setHasDescription(false)
       setHasTimeCode(false)
+      setIsEmpty(true)
     } else if (!description || !description?.trim()) {
-      setIsEmpty(true)
       setHasDescription(false)
-    } else if (!timeCode || hasOnlyZeros) {
       setIsEmpty(true)
+    } else if (!timeCode || hasOnlyZeros) {
       setHasTimeCode(false)
+      setIsEmpty(true)
     } else {
-      setIsEmpty(false)
       setHasTimeCode(true)
-      setSequenceCards([...sequenceCards, { description, timeCode }])
       setInputValue('')
+      setIsEmpty(false)
+      setSequenceCards([...sequenceCards, { description, timeCode }])
       form[0].focus()
       form.reset()
     }
   }
 
-  function onDelete(event) {
-    setIsEmpty(false)
+  function onDelete() {
     setHasDescription(true)
     setHasTimeCode(true)
     setInputValue('')
+    setIsEmpty(false)
   }
 
   function handleInputOnChange(event) {
