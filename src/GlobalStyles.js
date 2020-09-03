@@ -7,7 +7,7 @@ export default createGlobalStyle`
 }
 
 body {
-    margin: 0;
+    margin: 0 20px;
     font-size: 112.5%;
 }
 `

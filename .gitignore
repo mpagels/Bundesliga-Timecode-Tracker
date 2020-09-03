@@ -8,6 +8,7 @@
 
 # testing
 /coverage
+cypress/integration/examples/
 
 # production
 /build
@@ -22,3 +23,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+#tmp
+SequencePage copy.js
+timeCodeFormatter.js

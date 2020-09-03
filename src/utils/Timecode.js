@@ -133,3 +133,15 @@ export function getTimecodeTotalLength(ArrayOfTimecodes) {
   ArrayOfTimecodes.forEach((timecode) => TimecodeCalculator.add(timecode))
   return TimecodeCalculator.getResult()
 }
+
+export function getTimecodeTotalLengthFromSequenceCards(SequenceCards) {
+  TimecodeCalculator.reset()
+  SequenceCards.forEach(({ timeCode }) => TimecodeCalculator.add(timeCode))
+  return TimecodeCalculator.getResult()
+}
+
+export function getFormatedTimecode(timecodeAsString) {
+  TimecodeCalculator.reset()
+  TimecodeCalculator.add(timecodeAsString)
+  return TimecodeCalculator.getResult()
+}
