@@ -2,33 +2,35 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-function Tag({ title, isActive }) {
+Tag.propTypes = {
+  title: PropTypes.string.isRequired,
+  isActive: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
+}
+
+function Tag({ title, isActive, onClick, index }) {
   return (
-    <Button type="button" isActive={isActive}>
+    <Button onClick={() => onClick(index)} type="button" isActive={isActive}>
       {title}
     </Button>
   )
 }
 
-Tag.propTypes = {
-  title: PropTypes.string,
-  isActive: PropTypes.bool,
-}
-
 export default Tag
 
 const Button = styled.button`
-  border-radius: 10px;
+  all: unset;
   background-color: transparent;
-
+  border-radius: 10px;
   border: 2px solid #cdcdcd;
+  color: #a7a7a7;
   cursor: pointer;
   font-size: 18px;
+  margin: 0 5px;
   padding: 5px 20px;
   text-align: center;
-  margin: 0 5px;
-  color: #a7a7a7;
   ${({ isActive }) =>
     isActive &&
-    'background-color: #538EFB; border: 1px solid #538EFB; color: white'}
+    'background-color: #538EFB; border: 2px solid #538EFB; color: white'}
 `
