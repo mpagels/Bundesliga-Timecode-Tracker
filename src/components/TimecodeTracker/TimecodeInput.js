@@ -12,13 +12,13 @@ TimecodeInput.propTypes = {
 export default function TimecodeInput({ title, index, inputValue, onChange }) {
   return (
     <InputContainer>
-      <Label htmlFor={index}>{title}</Label>
+      <Label htmlFor={title}>{title}</Label>
       <br />
       <InputWrapper>
         <Input
           onChange={onChange}
-          id={index}
-          name="timecode"
+          name={title}
+          id={title}
           type="tel"
           placeholder="043017"
           value={inputValue}
