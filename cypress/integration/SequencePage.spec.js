@@ -57,7 +57,7 @@ context('SequencePage', () => {
   it('tests a complete empty save try', () => {
     cy.get('button').eq(-1).click()
     cy.get('span').eq(0).should('contain', 'Szenenbeschreibung fehlt')
-    cy.get('span').eq(-1).should('contain', 'Timecode fehlt oder Fehlerhaft')
+    cy.get('span').eq(-1).should('contain', 'Timecode fehlt oder fehlerhaft')
   })
 
   it('tests if the error message appears if only the textarea is empty', () => {
@@ -73,7 +73,7 @@ context('SequencePage', () => {
       .type(mockData[0].description)
       .should('have.value', mockData[0].description)
     cy.get('button').eq(-1).click()
-    cy.get('span').eq(-1).should('contain', 'Timecode fehlt oder Fehlerhaft')
+    cy.get('span').eq(-1).should('contain', 'Timecode fehlt oder fehlerhaft')
   })
 
   it('tests when at first the timecode input was forgotten, then filled with timecode and saved', () => {
@@ -81,7 +81,7 @@ context('SequencePage', () => {
       .type(mockData[0].description)
       .should('have.value', mockData[0].description)
     cy.get('button').eq(-1).click()
-    cy.get('span').eq(-1).should('contain', 'Timecode fehlt oder Fehlerhaft')
+    cy.get('span').eq(-1).should('contain', 'Timecode fehlt oder fehlerhaft')
     cy.get('input')
       .type(mockData[0].timeCode)
       .should('have.value', mockData[0].timeCode)
@@ -107,7 +107,7 @@ context('SequencePage', () => {
   it('tests the delete button after an empty save ', () => {
     cy.get('button').eq(-1).click()
     cy.get('span').eq(0).should('contain', 'Szenenbeschreibung fehlt')
-    cy.get('span').eq(-1).should('contain', 'Timecode fehlt oder Fehlerhaft')
+    cy.get('span').eq(-1).should('contain', 'Timecode fehlt oder fehlerhaft')
     cy.get('button').eq(-2).click()
     cy.get('span').eq(-1).should('not.contain', 'Szenenbeschreibung fehlt')
     cy.get('span').eq(-1).should('not.contain', 'Szenenbeschreibung fehlt')
@@ -136,10 +136,10 @@ context('SequencePage', () => {
     cy.get('button').eq(0).click()
     cy.get('button').eq(-1).click()
     cy.get('span').eq(0).should('contain', 'Szenenbeschreibung fehlt')
-    cy.get('span').eq(1).should('contain', 'Timecode fehlt oder Fehlerhaft')
+    cy.get('span').eq(1).should('contain', 'Timecode fehlt oder fehlerhaft')
     cy.get('span').eq(2).should('contain', 'Name fehlt')
-    cy.get('span').eq(3).should('contain', 'Timecode fehlt oder Fehlerhaft')
-    cy.get('span').eq(4).should('contain', 'Timecode fehlt oder Fehlerhaft')
+    cy.get('span').eq(3).should('contain', 'Timecode fehlt oder fehlerhaft')
+    cy.get('span').eq(4).should('contain', 'Timecode fehlt oder fehlerhaft')
   })
 
   it('tests save formular with "Tor" event', () => {
@@ -167,7 +167,7 @@ context('SequencePage', () => {
     cy.get('footer').should('contain', mockDataEvent[0].timeCodeResult)
   })
 
-  it.only('tests description and timecode input and last input is with event input and correct addition after every save', () => {
+  it('tests description and timecode input and last input is with event input and correct addition after every save', () => {
     mockData.forEach((data, index) => {
       cy.get('textarea')
         .type(data.description)

@@ -52,7 +52,7 @@ const InputWrapper = styled.div`
 `
 
 const Input = styled.input`
-  background-color: #e0e0e0;
+  background-color: var(----background-grey);
   border: 0;
   box-shadow: inset 0 0 3px 1px #b8b8b8;
   font-size: 150%;
