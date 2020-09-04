@@ -10,4 +10,9 @@ body {
     margin: 0 20px;
     font-size: 112.5%;
 }
+
+:root {
+    --background-grey: #e0e0e0;
+    --tag-border-grey: #e3e3e3;
+    }
 `

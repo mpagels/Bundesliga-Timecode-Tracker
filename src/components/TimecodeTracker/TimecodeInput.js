@@ -3,22 +3,22 @@ import React from 'react'
 import styled from 'styled-components/macro'
 
 TimecodeInput.propTypes = {
-  title: PropTypes.string,
+  title: PropTypes.string.isRequired,
   index: PropTypes.number,
-  inputValue: PropTypes.string,
-  onChange: PropTypes.func,
+  inputValue: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
 }
 
 export default function TimecodeInput({ title, index, inputValue, onChange }) {
   return (
     <InputContainer>
-      <Label htmlFor={index}>{title}</Label>
+      <Label htmlFor={title}>{title}</Label>
       <br />
       <InputWrapper>
         <Input
           onChange={onChange}
-          id={index}
-          name="timecode"
+          name={title}
+          id={title}
           type="tel"
           placeholder="043017"
           value={inputValue}
@@ -29,19 +29,20 @@ export default function TimecodeInput({ title, index, inputValue, onChange }) {
 }
 
 const InputContainer = styled.div`
+  align-items: start;
+  border-radius: 5px;
+  border: 1px solid #ddd;
   display: flex;
   flex-direction: column;
-  align-items: start;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  margin: 10px 0;
 `
 
 const Label = styled.label`
-  display: inline-block;
-  margin-bottom: 2px;
   color: #737373;
-  font-size: 18px;
+  display: inline-block;
   font-size: 150%;
+  font-size: 18px;
+  margin-bottom: 2px;
 `
 
 const InputWrapper = styled.div`
@@ -51,17 +52,16 @@ const InputWrapper = styled.div`
 `
 
 const Input = styled.input`
-  padding: 20px;
+  background-color: var(----background-grey);
   border: 0;
-  font-size: 18px;
   box-shadow: inset 0 0 3px 1px #b8b8b8;
-  background-color: #e0e0e0;
+  font-size: 150%;
+  font-size: 18px;
+  padding: 15px;
+  padding: 20px;
+  text-align: right;
   &:focus {
     box-shadow: inset 0 0 3px 1px black;
     outline: black;
   }
-
-  font-size: 150%;
-  text-align: right;
-  padding: 15px;
 `
