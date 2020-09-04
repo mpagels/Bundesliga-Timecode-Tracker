@@ -53,7 +53,7 @@ export default function SequencePage() {
 const Footer = styled.footer`
   align-items: center;
   background-color: white;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--background-grey);
   bottom: 0;
   display: flex;
   font-size: 32px;

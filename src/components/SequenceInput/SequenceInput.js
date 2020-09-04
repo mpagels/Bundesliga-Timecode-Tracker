@@ -58,7 +58,7 @@ export default function SequenceInput({ onSaveClick }) {
           onChange={(event) => handleTimeCodeChange(event, setTimeCode)}
         />
         {isDirty && (!timeCode || hasOnlyZeros) ? (
-          <InfoTimeCode hasError>Timecode fehlt oder Fehlerhaft</InfoTimeCode>
+          <InfoTimeCode hasError>Timecode fehlt oder fehlerhaft</InfoTimeCode>
         ) : (
           <InfoTimeCode>&nbsp;</InfoTimeCode>
         )}
@@ -100,7 +100,7 @@ export default function SequenceInput({ onSaveClick }) {
               {isDirty &&
               (!timeCodeLowerThirdIn || lowerThirdInHasOnlyZeros) ? (
                 <InfoTimeCode hasError>
-                  Timecode fehlt oder Fehlerhaft
+                  Timecode fehlt oder fehlerhaft
                 </InfoTimeCode>
               ) : (
                 <InfoTimeCode>&nbsp;</InfoTimeCode>
@@ -116,7 +116,7 @@ export default function SequenceInput({ onSaveClick }) {
               {isDirty &&
               (!timeCodeLowerThirdOut || lowerThirdOutHasOnlyZeros) ? (
                 <InfoTimeCode hasError>
-                  Timecode fehlt oder Fehlerhaft
+                  Timecode fehlt oder fehlerhaft
                 </InfoTimeCode>
               ) : (
                 <InfoTimeCode>&nbsp;</InfoTimeCode>
@@ -165,7 +165,6 @@ export default function SequenceInput({ onSaveClick }) {
       !lowerThirdInHasOnlyZeros &&
       !lowerThirdOutHasOnlyZeros
     ) {
-      setIsDirty(false)
       onSaveClick({
         description,
         timeCode,
@@ -174,12 +173,7 @@ export default function SequenceInput({ onSaveClick }) {
         timeCodeLowerThirdOut,
         playerName,
       })
-      setDescription('')
-      setTimeCode('')
-      setActiveTagIndex(null)
-      setPlayerName('')
-      setTimeCodeLowerThirdIn('')
-      setTimeCodeLowerThirdOut('')
+      resetState()
     }
   }
 
@@ -190,6 +184,10 @@ export default function SequenceInput({ onSaveClick }) {
 
   function onDeleteClick(event) {
     event.preventDefault()
+    resetState()
+  }
+
+  function resetState() {
     setIsDirty(false)
     setDescription('')
     setTimeCode('')
@@ -204,7 +202,7 @@ const Wrapper = styled.section`
   border-radius: 10px;
   margin-bottom: 80px;
   padding: 10px;
-  background-color: #e0e0e0;
+  background-color: var(--background-grey);
   ${(props) => props.isEmpty && 'box-shadow: 0 0 3px 3px #cb6870;'}
 `
 const SceneDescription = styled.textarea`
@@ -212,7 +210,7 @@ const SceneDescription = styled.textarea`
   height: 100px;
   padding: 10px;
   font-size: 130%;
-  background-color: #e0e0e0;
+  background-color: var(----background-grey);
   border: none;
   box-shadow: inset 0 0 3px 1px #b8b8b8;
   &:focus {
@@ -251,11 +249,13 @@ const Save = styled(Button)`
   }
 `
 const InfoScene = styled.span`
-  color: ${(props) => (props.hasError ? '#cb6870' : '#e0e0e0')};
+  color: ${(props) =>
+    props.hasError ? '#cb6870' : 'var(----background-grey)'};
   font-size: 12px;
 `
 const InfoTimeCode = styled(InfoScene)`
-  color: ${(props) => (props.hasError ? '#cb6870' : '#e0e0e0')};
+  color: ${(props) =>
+    props.hasError ? '#cb6870' : 'var(----background-grey)'};
   font-size: 12px;
 `
 const TagContainer = styled.div`
@@ -275,7 +275,7 @@ const NameInput = styled.input`
   width: 100%;
   font-size: 18px;
   box-shadow: inset 0 0 3px 1px #b8b8b8;
-  background-color: #e0e0e0;
+  background-color: var(----background-grey);
   &:focus {
     box-shadow: inset 0 0 3px 1px black;
     outline: black;

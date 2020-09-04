@@ -21,7 +21,7 @@ export default function SequenceCard({
 }) {
   return (
     <Card>
-      <Description>{description}</Description>
+      <p>{description}</p>
       {tag ? (
         <InfoIfTag>
           <TagAndLength>
@@ -54,10 +54,9 @@ const Card = styled.section`
   padding: 0 10px;
 `
 
-const Description = styled.p``
 const Timecode = styled.p`
   font-weight: 800;
-  margin: 0px;
+  margin: 0;
   text-align: right;
 `
 
@@ -72,7 +71,7 @@ const TagAndLength = styled.div`
 `
 
 const Tag = styled.div`
-  background-color: #e3e3e3;
+  background-color: var(--tag-border-grey);
   border-radius: 5px;
   color: #8e8e8e;
   height: 30px;
@@ -85,13 +84,8 @@ const LowerThirdContainer = styled.div`
     font-weight: 700;
   }
 `
-
 const Name = styled.p`
   margin: 0;
 `
-const TimecodeIn = styled.p`
-  margin: 0;
-`
-const TimecodeOut = styled.p`
-  margin: 0;
-`
+const TimecodeIn = styled(Name)``
+const TimecodeOut = styled(Name)``
