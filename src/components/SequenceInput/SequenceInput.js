@@ -26,7 +26,6 @@ export default function SequenceInput({ onSaveClick }) {
 
   const isCorrectTimeCode = !checkCorrectTimeCode()
 
-  console.log(isCorrectTimeCode)
   const hasOnlyZeros = new RegExp('^[0]+$').test(timeCode)
   const lowerThirdInHasOnlyZeros = new RegExp('^[0]+$').test(
     timeCodeLowerThirdIn
