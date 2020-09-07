@@ -11,6 +11,9 @@ SequenceCard.propTypes = {
   timeCodeLowerThirdIn: PropTypes.string,
   timeCodeLowerThirdOut: PropTypes.string,
   playerName: PropTypes.string,
+  isActive: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  handleToggle: PropTypes.func.isRequired,
 }
 
 export default function SequenceCard({
