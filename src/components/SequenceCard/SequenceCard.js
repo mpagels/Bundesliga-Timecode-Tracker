@@ -30,12 +30,14 @@ export default function SequenceCard({
   return (
     <Card isActive={isActive}>
       <Header>
-        <p>{description}</p>
-        {isActive ? (
-          <PauseButton onClick={() => handleToggle(index)} />
-        ) : (
-          <PlayButton onClick={() => handleToggle(index)} />
-        )}
+        <Description>{description}</Description>
+        <ToggleContainer>
+          {isActive ? (
+            <PauseButton onClick={() => handleToggle(index)} />
+          ) : (
+            <PlayButton onClick={() => handleToggle(index)} />
+          )}
+        </ToggleContainer>
       </Header>
       {tag ? (
         <InfoIfTag>
@@ -70,6 +72,9 @@ const Card = styled.section`
   ${(props) => !props.isActive && 'background-color : #E7C5CA; color: grey;'}
 `
 
+const Description = styled.p`
+  word-break: break-word;
+`
 const Header = styled.header`
   display: flex;
   justify-content: space-between;
@@ -109,3 +114,8 @@ const Name = styled.p`
 `
 const TimecodeIn = styled(Name)``
 const TimecodeOut = styled(Name)``
+
+const ToggleContainer = styled.div`
+  height: 48px;
+  width: 48px;
+`
