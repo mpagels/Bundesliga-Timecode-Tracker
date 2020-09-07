@@ -9,13 +9,20 @@ TimecodeInput.propTypes = {
   onChange: PropTypes.func.isRequired,
 }
 
-export default function TimecodeInput({ title, index, inputValue, onChange }) {
+export default function TimecodeInput({
+  title,
+  index,
+  inputValue,
+  onChange,
+  disabled,
+}) {
   return (
     <InputContainer>
       <Label htmlFor={title}>{title}</Label>
       <br />
       <InputWrapper>
         <Input
+          disabled={disabled}
           onChange={onChange}
           name={title}
           id={title}

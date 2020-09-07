@@ -24,6 +24,10 @@ export default function SequenceInput({ onSaveClick }) {
     timeCodeLowerThirdIn === '' ||
     timeCodeLowerThirdOut === ''
 
+  const isCorrectTimeCode =
+    Number(timeCodeLowerThirdIn) > Number(timeCodeLowerThirdOut) &&
+    Number(timeCodeLowerThirdOut) < Number(timeCodeLowerThirdIn)
+
   const hasOnlyZeros = new RegExp('^[0]+$').test(timeCode)
   const lowerThirdInHasOnlyZeros = new RegExp('^[0]+$').test(
     timeCodeLowerThirdIn
@@ -31,6 +35,8 @@ export default function SequenceInput({ onSaveClick }) {
   const lowerThirdOutHasOnlyZeros = new RegExp('^[0]+$').test(
     timeCodeLowerThirdOut
   )
+
+  const disabled = timeCodeLowerThirdIn === ''
 
   return (
     <Wrapper
@@ -98,7 +104,9 @@ export default function SequenceInput({ onSaveClick }) {
                 }
               />
               {isDirty &&
-              (!timeCodeLowerThirdIn || lowerThirdInHasOnlyZeros) ? (
+              (!timeCodeLowerThirdIn ||
+                lowerThirdInHasOnlyZeros ||
+                isCorrectTimeCode) ? (
                 <InfoTimeCode hasError>
                   Timecode fehlt oder fehlerhaft
                 </InfoTimeCode>
@@ -107,6 +115,7 @@ export default function SequenceInput({ onSaveClick }) {
               )}
               <TimecodeInput
                 style={{ margin: '10px 0' }}
+                disabled={disabled}
                 title="Timecode OUT"
                 inputValue={timeCodeLowerThirdOut}
                 onChange={(event) =>
@@ -114,7 +123,9 @@ export default function SequenceInput({ onSaveClick }) {
                 }
               />
               {isDirty &&
-              (!timeCodeLowerThirdOut || lowerThirdOutHasOnlyZeros) ? (
+              (!timeCodeLowerThirdOut ||
+                lowerThirdOutHasOnlyZeros ||
+                isCorrectTimeCode) ? (
                 <InfoTimeCode hasError>
                   Timecode fehlt oder fehlerhaft
                 </InfoTimeCode>
@@ -126,7 +137,7 @@ export default function SequenceInput({ onSaveClick }) {
         )}
         <Actions>
           <Delete onClick={onDeleteClick} type="reset">
-            LÖSCHEN
+            ABBRECHEN
           </Delete>
           <Save>SPEICHERN</Save>
         </Actions>
@@ -163,7 +174,8 @@ export default function SequenceInput({ onSaveClick }) {
       !isEmptyEvent &&
       !hasOnlyZeros &&
       !lowerThirdInHasOnlyZeros &&
-      !lowerThirdOutHasOnlyZeros
+      !lowerThirdOutHasOnlyZeros &&
+      !isCorrectTimeCode
     ) {
       onSaveClick({
         description,
