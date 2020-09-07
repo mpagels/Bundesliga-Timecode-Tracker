@@ -20,17 +20,21 @@ export default function SequencePage() {
             timeCodeLowerThirdIn,
             timeCodeLowerThirdOut,
             playerName,
+            isActive,
           },
           index
         ) => (
           <SequenceCard
             description={description}
             key={index}
+            index={index}
             lengthTimeCode={getFormatedTimecode(timeCode)}
             tag={tag}
             timeCodeLowerThirdIn={getFormatedTimecode(timeCodeLowerThirdIn)}
             timeCodeLowerThirdOut={getFormatedTimecode(timeCodeLowerThirdOut)}
             playerName={playerName}
+            isActive={isActive}
+            handleToggle={handleToggle}
           />
         )
       )}
@@ -47,6 +51,16 @@ export default function SequencePage() {
 
   function onSave(sequence) {
     setSequenceCards([...sequenceCards, sequence])
+  }
+
+  function handleToggle(index) {
+    const sequence = sequenceCards[index]
+    sequence.isActive = !sequence.isActive
+    setSequenceCards([
+      ...sequenceCards.slice(0, index),
+      sequence,
+      ...sequenceCards.slice(index + 1),
+    ])
   }
 }
 

@@ -24,9 +24,7 @@ export default function SequenceInput({ onSaveClick }) {
     timeCodeLowerThirdIn === '' ||
     timeCodeLowerThirdOut === ''
 
-  const isCorrectTimeCode =
-    Number(timeCodeLowerThirdIn) > Number(timeCodeLowerThirdOut) &&
-    Number(timeCodeLowerThirdOut) < Number(timeCodeLowerThirdIn)
+  const isCorrectTimeCode = !checkCorrectTimeCode()
 
   const hasOnlyZeros = new RegExp('^[0]+$').test(timeCode)
   const lowerThirdInHasOnlyZeros = new RegExp('^[0]+$').test(
@@ -165,6 +163,7 @@ export default function SequenceInput({ onSaveClick }) {
       onSaveClick({
         description,
         timeCode,
+        isActive: true,
       })
       setDescription('')
       setTimeCode('')
@@ -176,7 +175,7 @@ export default function SequenceInput({ onSaveClick }) {
         hasOnlyZeros ||
         lowerThirdInHasOnlyZeros ||
         lowerThirdOutHasOnlyZeros ||
-        isCorrectTimeCode
+        !checkCorrectTimeCode()
       )
     ) {
       onSaveClick({
@@ -186,6 +185,7 @@ export default function SequenceInput({ onSaveClick }) {
         timeCodeLowerThirdIn,
         timeCodeLowerThirdOut,
         playerName,
+        isActive: true,
       })
       resetState()
     }
@@ -209,6 +209,13 @@ export default function SequenceInput({ onSaveClick }) {
     setPlayerName('')
     setTimeCodeLowerThirdIn('')
     setTimeCodeLowerThirdOut('')
+  }
+
+  function checkCorrectTimeCode() {
+    return (
+      Number(timeCodeLowerThirdIn) < Number(timeCodeLowerThirdOut) &&
+      Number(timeCodeLowerThirdOut) > Number(timeCodeLowerThirdIn)
+    )
   }
 }
 

@@ -54,6 +54,19 @@ context('SequencePage', () => {
     })
   })
 
+  it('tests description and timecode input and correct addition after every save, then deactivate the first sequence', () => {
+    mockData.forEach((data, index) => {
+      cy.get('textarea')
+        .type(data.description)
+        .should('have.value', data.description)
+      cy.get('input').type(data.timeCode).should('have.value', data.timeCode)
+      cy.get('button').eq(-1).click()
+      cy.get('footer').should('contain', data.timeCodeResult)
+    })
+    cy.get('svg').eq(0).click()
+    cy.get('footer').should('contain', '00:01:48:19')
+  })
+
   it('tests a complete empty save try', () => {
     cy.get('button').eq(-1).click()
     cy.get('span').eq(0).should('contain', 'Szenenbeschreibung fehlt')

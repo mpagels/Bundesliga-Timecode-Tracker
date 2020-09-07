@@ -136,7 +136,9 @@ export function getTimecodeTotalLength(ArrayOfTimecodes) {
 
 export function getTimecodeTotalLengthFromSequenceCards(SequenceCards) {
   TimecodeCalculator.reset()
-  SequenceCards.forEach(({ timeCode }) => TimecodeCalculator.add(timeCode))
+  SequenceCards.forEach(
+    ({ timeCode, isActive }) => isActive && TimecodeCalculator.add(timeCode)
+  )
   return TimecodeCalculator.getResult()
 }
 
