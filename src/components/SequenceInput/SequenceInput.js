@@ -165,6 +165,7 @@ export default function SequenceInput({ onSaveClick }) {
       onSaveClick({
         description,
         timeCode,
+        isActive: true,
       })
       setDescription('')
       setTimeCode('')
@@ -186,6 +187,7 @@ export default function SequenceInput({ onSaveClick }) {
         timeCodeLowerThirdIn,
         timeCodeLowerThirdOut,
         playerName,
+        isActive: true,
       })
       resetState()
     }

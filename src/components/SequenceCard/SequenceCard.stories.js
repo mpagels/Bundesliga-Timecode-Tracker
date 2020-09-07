@@ -8,11 +8,19 @@ export default {
 
 const Template = (args) => <SequenceCard {...args} />
 
-export const Default = Template.bind({})
-Default.args = {
+export const Active = Template.bind({})
+Active.args = {
   description:
     'Schuss Leipzig Pass von Sabitzer, Werner flach links am Tor vorbei',
   lengthTimeCode: '00:00:32:15',
+  isActive: true,
+}
+export const Inactive = Template.bind({})
+Inactive.args = {
+  description:
+    'Schuss Leipzig Pass von Sabitzer, Werner flach links am Tor vorbei',
+  lengthTimeCode: '00:00:32:15',
+  isActive: false,
 }
 
 export const WithTag = Template.bind({})
@@ -24,4 +32,5 @@ WithTag.args = {
   lengthTimeCode: '00:00:32:15',
   timeCodeLowerThirdIn: '00:00:15:00',
   timeCodeLowerThirdOut: '00:00:23:00',
+  isActive: true,
 }

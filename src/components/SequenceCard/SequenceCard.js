@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components/macro'
+import { ReactComponent as PlayButton } from '../../assets/play-button.svg'
+import { ReactComponent as PauseButton } from '../../assets/pause-button.svg'
 import PropTypes from 'prop-types'
 
 SequenceCard.propTypes = {
@@ -18,10 +20,20 @@ export default function SequenceCard({
   timeCodeLowerThirdIn = '',
   timeCodeLowerThirdOut = '',
   playerName = '',
+  isActive,
+  index,
+  handleToggle,
 }) {
   return (
-    <Card>
-      <p>{description}</p>
+    <Card isActive={isActive}>
+      <Header>
+        <p>{description}</p>
+        {isActive ? (
+          <PauseButton onClick={() => handleToggle(index)} />
+        ) : (
+          <PlayButton onClick={() => handleToggle(index)} />
+        )}
+      </Header>
       {tag ? (
         <InfoIfTag>
           <TagAndLength>
@@ -52,8 +64,13 @@ const Card = styled.section`
   border: 1px solid grey;
   margin: 15px 0;
   padding: 0 10px;
+  ${(props) => !props.isActive && 'background-color : #E7C5CA; color: grey;'}
 `
 
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+`
 const Timecode = styled.p`
   font-weight: 800;
   margin: 0;
