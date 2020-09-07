@@ -170,12 +170,14 @@ export default function SequenceInput({ onSaveClick }) {
       setTimeCode('')
       setActiveTagIndex(null)
     } else if (
-      !isEmptyScene &&
-      !isEmptyEvent &&
-      !hasOnlyZeros &&
-      !lowerThirdInHasOnlyZeros &&
-      !lowerThirdOutHasOnlyZeros &&
-      !isCorrectTimeCode
+      !(
+        isEmptyScene ||
+        isEmptyEvent ||
+        hasOnlyZeros ||
+        lowerThirdInHasOnlyZeros ||
+        lowerThirdOutHasOnlyZeros ||
+        isCorrectTimeCode
+      )
     ) {
       onSaveClick({
         description,
