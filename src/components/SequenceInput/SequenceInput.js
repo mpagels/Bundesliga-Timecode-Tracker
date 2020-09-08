@@ -95,7 +95,7 @@ export default function SequenceInput({ onSaveClick }) {
             <LowerThirdContainer>
               <TimecodeInput
                 style={{ margin: '10px 0' }}
-                title="Bauchbinde IN in der Szene"
+                title="Bauchbinde IN (relativ zur Szene)"
                 inputValue={timeCodeLowerThirdIn}
                 onChange={(event) =>
                   handleTimeCodeChange(event, setTimeCodeLowerThirdIn)
@@ -106,7 +106,7 @@ export default function SequenceInput({ onSaveClick }) {
                 lowerThirdInHasOnlyZeros ||
                 isCorrectTimeCode) ? (
                 <InfoTimeCode hasError>
-                  Timecode fehlt ist fehlerhaft oder ist insgesamt zu lang!
+                  Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!
                 </InfoTimeCode>
               ) : (
                 <InfoTimeCode>&nbsp;</InfoTimeCode>
@@ -126,7 +126,7 @@ export default function SequenceInput({ onSaveClick }) {
                 lowerThirdOutHasOnlyZeros ||
                 isCorrectTimeCode) ? (
                 <InfoTimeCode hasError>
-                  Timecode fehlt ist fehlerhaft oder ist insgesamt zu lang!
+                  Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!
                 </InfoTimeCode>
               ) : (
                 <InfoTimeCode>&nbsp;</InfoTimeCode>
