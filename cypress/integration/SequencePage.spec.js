@@ -31,10 +31,10 @@ const mockDataEvent = [
     playerName: 'Goretzka',
     timeCode: '3215',
     timeCodeLowerThirdIn: '1500',
-    timeCodeLowerThirdOut: '2300',
+    timeCodeLowerThirdLength: '0800',
     timeCodeResult: '00:00:32:15',
     lowerThirdInResult: '00:00:15:00',
-    lowerThirdOutResult: '00:00:23:00',
+    lowerThirdLength: '00:00:08:00',
   },
 ]
 
@@ -151,8 +151,18 @@ context('SequencePage', () => {
     cy.get('span').eq(0).should('contain', 'Szenenbeschreibung fehlt')
     cy.get('span').eq(1).should('contain', 'Timecode fehlt oder fehlerhaft')
     cy.get('span').eq(2).should('contain', 'Name fehlt')
-    cy.get('span').eq(3).should('contain', 'Timecode fehlt oder fehlerhaft')
-    cy.get('span').eq(4).should('contain', 'Timecode fehlt oder fehlerhaft')
+    cy.get('span')
+      .eq(3)
+      .should(
+        'contain',
+        'Timecode fehlt ist fehlerhaft oder ist insgesamt zu lang!'
+      )
+    cy.get('span')
+      .eq(4)
+      .should(
+        'contain',
+        'Timecode fehlt ist fehlerhaft oder ist insgesamt zu lang!'
+      )
   })
 
   it('tests save formular with "Tor" event', () => {
@@ -174,8 +184,8 @@ context('SequencePage', () => {
       .should('have.value', mockDataEvent[0].timeCodeLowerThirdIn)
     cy.get('input')
       .eq(3)
-      .type(mockDataEvent[0].timeCodeLowerThirdOut)
-      .should('have.value', mockDataEvent[0].timeCodeLowerThirdOut)
+      .type(mockDataEvent[0].timeCodeLowerThirdLength)
+      .should('have.value', mockDataEvent[0].timeCodeLowerThirdLength)
     cy.get('button').eq(-1).click()
     cy.get('footer').should('contain', mockDataEvent[0].timeCodeResult)
   })
@@ -207,8 +217,8 @@ context('SequencePage', () => {
       .should('have.value', mockDataEvent[0].timeCodeLowerThirdIn)
     cy.get('input')
       .eq(3)
-      .type(mockDataEvent[0].timeCodeLowerThirdOut)
-      .should('have.value', mockDataEvent[0].timeCodeLowerThirdOut)
+      .type(mockDataEvent[0].timeCodeLowerThirdLength)
+      .should('have.value', mockDataEvent[0].timeCodeLowerThirdLength)
     cy.get('button').eq(-1).click()
     cy.get('footer').should('contain', '00:02:56:01')
   })
