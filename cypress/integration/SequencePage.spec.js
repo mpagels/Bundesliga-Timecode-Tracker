@@ -4,22 +4,26 @@ const mockData = [
   {
     description: 'Mbabu schaltet sich vorne ein, Alaba klärt zur Ecke.',
     timeCode: '3417',
+    timeCodeFormated: '34:17',
     timeCodeResult: '00:00:34:17',
   },
   {
     description:
       'Goretzka chippt auf Müller, dessen Kopfballbogenlampe aufs Tordach fliegt.',
     timeCode: '004708',
+    timeCodeFormated: '00:47:08',
     timeCodeResult: '00:01:22:00',
   },
   {
     description: 'Freistoß aus 25 Metern zentraler Position. Neuer hält.',
     timeCode: '3214',
+    timeCodeFormated: '32:14',
     timeCodeResult: '00:01:54:14',
   },
   {
     description: 'Lewandowski, der auf das kurze Eck schießt Casteels pariert.',
     timeCode: '002822',
+    timeCodeFormated: '00:28:22',
     timeCodeResult: '00:02:23:11',
   },
 ]
@@ -30,8 +34,11 @@ const mockDataEvent = [
       'Goretzka chippt auf Müller, dessen Kopfballbogenlampe aufs Tordach fliegt.',
     playerName: 'Goretzka',
     timeCode: '3215',
+    timeCodeFormated: '32:15',
     timeCodeLowerThirdIn: '1500',
+    timeCodeLowerThirdInFormatted: '15:00',
     timeCodeLowerThirdLength: '0800',
+    timeCodeLowerThirdLengthFormatted: '08:00',
     timeCodeResult: '00:00:32:15',
     lowerThirdInResult: '00:00:15:00',
     lowerThirdLength: '00:00:08:00',
@@ -48,7 +55,9 @@ context('SequencePage', () => {
       cy.get('textarea')
         .type(data.description)
         .should('have.value', data.description)
-      cy.get('input').type(data.timeCode).should('have.value', data.timeCode)
+      cy.get('input')
+        .type(data.timeCode)
+        .should('have.value', data.timeCodeFormated)
       cy.get('button').eq(-1).click()
       cy.get('footer').should('contain', data.timeCodeResult)
     })
@@ -59,7 +68,9 @@ context('SequencePage', () => {
       cy.get('textarea')
         .type(data.description)
         .should('have.value', data.description)
-      cy.get('input').type(data.timeCode).should('have.value', data.timeCode)
+      cy.get('input')
+        .type(data.timeCode)
+        .should('have.value', data.timeCodeFormated)
       cy.get('button').eq(-1).click()
       cy.get('footer').should('contain', data.timeCodeResult)
     })
@@ -76,7 +87,7 @@ context('SequencePage', () => {
   it('tests if the error message appears if only the textarea is empty', () => {
     cy.get('input')
       .type(mockData[0].timeCode)
-      .should('have.value', mockData[0].timeCode)
+      .should('have.value', mockData[0].timeCodeFormated)
     cy.get('button').eq(-1).click()
     cy.get('span').eq(0).should('contain', 'Szenenbeschreibung fehlt')
   })
@@ -97,7 +108,7 @@ context('SequencePage', () => {
     cy.get('span').eq(-1).should('contain', 'Timecode fehlt oder fehlerhaft')
     cy.get('input')
       .type(mockData[0].timeCode)
-      .should('have.value', mockData[0].timeCode)
+      .should('have.value', mockData[0].timeCodeFormated)
     cy.get('span').eq(-1).should('not.contain', 'Szenenbeschreibung fehlt')
     cy.get('button').eq(-1).click()
     cy.get('footer').should('contain', mockData[0].timeCodeResult)
@@ -106,7 +117,7 @@ context('SequencePage', () => {
   it('tests when at first the textarea input was forgotten, then filled with timecode and saved', () => {
     cy.get('input')
       .type(mockData[0].timeCode)
-      .should('have.value', mockData[0].timeCode)
+      .should('have.value', mockData[0].timeCodeFormated)
     cy.get('button').eq(-1).click()
     cy.get('span').eq(0).should('contain', 'Szenenbeschreibung fehlt')
     cy.get('textarea')
@@ -132,7 +143,7 @@ context('SequencePage', () => {
       .should('have.value', mockData[0].description)
     cy.get('input')
       .type(mockData[0].timeCode)
-      .should('have.value', mockData[0].timeCode)
+      .should('have.value', mockData[0].timeCodeFormated)
     cy.get('button').eq(-2).click()
     cy.get('textarea').should('not.have.value')
     cy.get('input').should('not.have.value')
@@ -155,13 +166,13 @@ context('SequencePage', () => {
       .eq(3)
       .should(
         'contain',
-        'Timecode fehlt ist fehlerhaft oder ist insgesamt zu lang!'
+        'Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!'
       )
     cy.get('span')
       .eq(4)
       .should(
         'contain',
-        'Timecode fehlt ist fehlerhaft oder ist insgesamt zu lang!'
+        'Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!'
       )
   })
 
@@ -173,7 +184,7 @@ context('SequencePage', () => {
     cy.get('input')
       .eq(0)
       .type(mockDataEvent[0].timeCode)
-      .should('have.value', mockDataEvent[0].timeCode)
+      .should('have.value', mockDataEvent[0].timeCodeFormated)
     cy.get('input')
       .eq(1)
       .type(mockDataEvent[0].playerName)
@@ -181,11 +192,11 @@ context('SequencePage', () => {
     cy.get('input')
       .eq(2)
       .type(mockDataEvent[0].timeCodeLowerThirdIn)
-      .should('have.value', mockDataEvent[0].timeCodeLowerThirdIn)
+      .should('have.value', mockDataEvent[0].timeCodeLowerThirdInFormatted)
     cy.get('input')
       .eq(3)
       .type(mockDataEvent[0].timeCodeLowerThirdLength)
-      .should('have.value', mockDataEvent[0].timeCodeLowerThirdLength)
+      .should('have.value', mockDataEvent[0].timeCodeLowerThirdLengthFormatted)
     cy.get('button').eq(-1).click()
     cy.get('footer').should('contain', mockDataEvent[0].timeCodeResult)
   })
@@ -195,7 +206,9 @@ context('SequencePage', () => {
       cy.get('textarea')
         .type(data.description)
         .should('have.value', data.description)
-      cy.get('input').type(data.timeCode).should('have.value', data.timeCode)
+      cy.get('input')
+        .type(data.timeCode)
+        .should('have.value', data.timeCodeFormated)
       cy.get('button').eq(-1).click()
       cy.get('footer').should('contain', data.timeCodeResult)
     })
@@ -206,7 +219,7 @@ context('SequencePage', () => {
     cy.get('input')
       .eq(0)
       .type(mockDataEvent[0].timeCode)
-      .should('have.value', mockDataEvent[0].timeCode)
+      .should('have.value', mockDataEvent[0].timeCodeFormated)
     cy.get('input')
       .eq(1)
       .type(mockDataEvent[0].playerName)
@@ -214,11 +227,11 @@ context('SequencePage', () => {
     cy.get('input')
       .eq(2)
       .type(mockDataEvent[0].timeCodeLowerThirdIn)
-      .should('have.value', mockDataEvent[0].timeCodeLowerThirdIn)
+      .should('have.value', mockDataEvent[0].timeCodeLowerThirdInFormatted)
     cy.get('input')
       .eq(3)
       .type(mockDataEvent[0].timeCodeLowerThirdLength)
-      .should('have.value', mockDataEvent[0].timeCodeLowerThirdLength)
+      .should('have.value', mockDataEvent[0].timeCodeLowerThirdLengthFormatted)
     cy.get('button').eq(-1).click()
     cy.get('footer').should('contain', '00:02:56:01')
   })

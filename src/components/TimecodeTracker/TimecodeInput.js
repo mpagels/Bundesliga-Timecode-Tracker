@@ -16,7 +16,7 @@ export default function TimecodeInput({
   inputValue,
   onChange,
   disabled,
-  placeholder = '043017',
+  placeholder = 'MM:SS:FF',
 }) {
   return (
     <InputContainer>

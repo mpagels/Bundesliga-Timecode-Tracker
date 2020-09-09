@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components/macro'
 import Tag from '../Tag/Tag'
 import TimecodeInput from '../TimecodeTracker/TimecodeInput'
+import { formatter } from '../../utils/timeCodeFormatter'
 
 SequenceInput.propTypes = {
   onSaveClick: PropTypes.func.isRequired,
@@ -24,7 +25,7 @@ export default function SequenceInput({ onSaveClick }) {
     timeCodeLowerThirdIn === '' ||
     timeCodeLowerThirdLength === ''
 
-  const isCorrectTimeCode = timeCode
+  const isCorrectTimeCode = timeCode.length % 2 === 0
 
   const hasOnlyZeros = new RegExp('^[0]+$').test(timeCode)
   const lowerThirdInHasOnlyZeros = new RegExp('^[0]+$').test(
@@ -34,7 +35,14 @@ export default function SequenceInput({ onSaveClick }) {
     timeCodeLowerThirdLength
   )
 
+  const isCorrectLowerThirdIn =
+    timeCodeLowerThirdIn.length % 2 === 0 && timeCodeLowerThirdIn !== ''
+  const isCorrectLowerThirdLength =
+    timeCodeLowerThirdLength.length % 2 === 0 && timeCodeLowerThirdLength !== ''
+
   const disabled = timeCodeLowerThirdIn === ''
+
+  const hasCorrectLowerThirdLength = checkCorrectTimeCode()
 
   return (
     <Wrapper
@@ -58,10 +66,10 @@ export default function SequenceInput({ onSaveClick }) {
         )}
         <TimecodeInput
           title="Szenenlänge"
-          inputValue={timeCode}
+          inputValue={formatter(timeCode)}
           onChange={(event) => handleTimeCodeChange(event, setTimeCode)}
         />
-        {isDirty && (!timeCode || hasOnlyZeros) ? (
+        {isDirty && (!timeCode || hasOnlyZeros || !isCorrectTimeCode) ? (
           <InfoTimeCode hasError>Timecode fehlt oder fehlerhaft</InfoTimeCode>
         ) : (
           <InfoTimeCode>&nbsp;</InfoTimeCode>
@@ -96,7 +104,7 @@ export default function SequenceInput({ onSaveClick }) {
               <TimecodeInput
                 style={{ margin: '10px 0' }}
                 title="Bauchbinde IN (relativ zur Szene)"
-                inputValue={timeCodeLowerThirdIn}
+                inputValue={formatter(timeCodeLowerThirdIn)}
                 onChange={(event) =>
                   handleTimeCodeChange(event, setTimeCodeLowerThirdIn)
                 }
@@ -104,7 +112,8 @@ export default function SequenceInput({ onSaveClick }) {
               {isDirty &&
               (!timeCodeLowerThirdIn ||
                 lowerThirdInHasOnlyZeros ||
-                isCorrectTimeCode) ? (
+                !isCorrectLowerThirdIn ||
+                !hasCorrectLowerThirdLength) ? (
                 <InfoTimeCode hasError>
                   Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!
                 </InfoTimeCode>
@@ -115,8 +124,8 @@ export default function SequenceInput({ onSaveClick }) {
                 style={{ margin: '10px 0' }}
                 disabled={disabled}
                 title="Bauchbinde Länge in ssff (s=sec / f=frame)"
-                placeholder="0800"
-                inputValue={timeCodeLowerThirdLength}
+                placeholder="SS:FF"
+                inputValue={formatter(timeCodeLowerThirdLength)}
                 onChange={(event) =>
                   handleTimeCodeChange(event, setTimeCodeLowerThirdLength)
                 }
@@ -124,7 +133,8 @@ export default function SequenceInput({ onSaveClick }) {
               {isDirty &&
               (!timeCodeLowerThirdLength ||
                 lowerThirdOutHasOnlyZeros ||
-                isCorrectTimeCode) ? (
+                !isCorrectLowerThirdLength ||
+                !hasCorrectLowerThirdLength) ? (
                 <InfoTimeCode hasError>
                   Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!
                 </InfoTimeCode>
@@ -146,9 +156,14 @@ export default function SequenceInput({ onSaveClick }) {
 
   function handleTimeCodeChange(event, timeCodeSetterFunc) {
     const { value } = event.target
+    const formattedTimecCode = getTimeCodeUnFormatted(value)
     value.length < 9 &&
-      RegExp('^[0-9]*$').test(value) &&
-      timeCodeSetterFunc(value)
+      RegExp('^[0-9]*$').test(formattedTimecCode) &&
+      timeCodeSetterFunc(formattedTimecCode)
+  }
+
+  function getTimeCodeUnFormatted(timeCode) {
+    return timeCode.split(':').join('')
   }
 
   function handleDescriptionChange(event) {
@@ -159,7 +174,12 @@ export default function SequenceInput({ onSaveClick }) {
     event.preventDefault()
     setIsDirty(true)
 
-    if (!isEmptyScene && !hasOnlyZeros && activeTagIndex === null) {
+    if (
+      !isEmptyScene &&
+      !hasOnlyZeros &&
+      activeTagIndex === null &&
+      isCorrectTimeCode
+    ) {
       setIsDirty(false)
       onSaveClick({
         description,
@@ -176,6 +196,8 @@ export default function SequenceInput({ onSaveClick }) {
         hasOnlyZeros ||
         lowerThirdInHasOnlyZeros ||
         lowerThirdOutHasOnlyZeros ||
+        !isCorrectLowerThirdIn ||
+        !isCorrectLowerThirdLength ||
         !checkCorrectTimeCode()
       )
     ) {

@@ -26,4 +26,4 @@ yarn-error.log*
 
 #tmp
 SequencePage copy.js
-timeCodeFormatter.js
+timeCodeFormatter_tmp.js
