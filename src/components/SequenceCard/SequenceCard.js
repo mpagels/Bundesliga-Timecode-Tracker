@@ -3,17 +3,23 @@ import styled from 'styled-components/macro'
 import { ReactComponent as PlayButton } from '../../assets/play-button.svg'
 import { ReactComponent as PauseButton } from '../../assets/pause-button.svg'
 import PropTypes from 'prop-types'
+import {
+  getFormatedTimecode,
+  getLowerThirdTimeCodeIn,
+  getLowerThirdTimeCodeOut,
+} from '../../utils/Timecode'
 
 SequenceCard.propTypes = {
   description: PropTypes.string.isRequired,
   lengthTimeCode: PropTypes.string.isRequired,
   tag: PropTypes.string,
   timeCodeLowerThirdIn: PropTypes.string,
-  timeCodeLowerThirdOut: PropTypes.string,
+  timeCodeLowerThirdLength: PropTypes.string,
   playerName: PropTypes.string,
   isActive: PropTypes.bool.isRequired,
   index: PropTypes.number.isRequired,
   handleToggle: PropTypes.func.isRequired,
+  allSequenceCards: PropTypes.array.isRequired,
 }
 
 export default function SequenceCard({
@@ -21,11 +27,12 @@ export default function SequenceCard({
   lengthTimeCode,
   tag = '',
   timeCodeLowerThirdIn = '',
-  timeCodeLowerThirdOut = '',
+  timeCodeLowerThirdLength = '',
   playerName = '',
   isActive,
   index,
   handleToggle,
+  allSequenceCards,
 }) {
   return (
     <Card isActive={isActive}>
@@ -43,22 +50,37 @@ export default function SequenceCard({
         <InfoIfTag>
           <TagAndLength>
             <Tag>{tag}</Tag>
-            <Timecode>{lengthTimeCode}</Timecode>
+            <Timecode>{getFormatedTimecode(lengthTimeCode)}</Timecode>
           </TagAndLength>
           <LowerThirdContainer>
             <Name>
               Spieler: <span>{playerName}</span>
             </Name>
             <TimecodeIn>
-              Bauchbinde IN: <span>{timeCodeLowerThirdIn}</span>
+              Bauchbinde IN:
+              <span>
+                {getLowerThirdTimeCodeIn(
+                  index,
+                  allSequenceCards,
+                  timeCodeLowerThirdIn
+                )}
+              </span>
             </TimecodeIn>
             <TimecodeOut>
-              Bauchbinde OUT: <span>{timeCodeLowerThirdOut}</span>
+              Bauchbinde OUT:
+              <span>
+                {getLowerThirdTimeCodeOut(
+                  index,
+                  allSequenceCards,
+                  timeCodeLowerThirdIn,
+                  timeCodeLowerThirdLength
+                )}
+              </span>
             </TimecodeOut>
           </LowerThirdContainer>
         </InfoIfTag>
       ) : (
-        <Timecode>{lengthTimeCode}</Timecode>
+        <Timecode>{getFormatedTimecode(lengthTimeCode)}</Timecode>
       )}
     </Card>
   )

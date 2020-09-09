@@ -16,22 +16,22 @@ export default function SequenceInput({ onSaveClick }) {
   const [isDirty, setIsDirty] = useState(false)
   const [playerName, setPlayerName] = useState('')
   const [timeCodeLowerThirdIn, setTimeCodeLowerThirdIn] = useState('')
-  const [timeCodeLowerThirdOut, setTimeCodeLowerThirdOut] = useState('')
+  const [timeCodeLowerThirdLength, setTimeCodeLowerThirdLength] = useState('')
 
   const isEmptyScene = description === '' || timeCode === ''
   const isEmptyEvent =
     playerName === '' ||
     timeCodeLowerThirdIn === '' ||
-    timeCodeLowerThirdOut === ''
+    timeCodeLowerThirdLength === ''
 
-  const isCorrectTimeCode = !checkCorrectTimeCode()
+  const isCorrectTimeCode = timeCode
 
   const hasOnlyZeros = new RegExp('^[0]+$').test(timeCode)
   const lowerThirdInHasOnlyZeros = new RegExp('^[0]+$').test(
     timeCodeLowerThirdIn
   )
   const lowerThirdOutHasOnlyZeros = new RegExp('^[0]+$').test(
-    timeCodeLowerThirdOut
+    timeCodeLowerThirdLength
   )
 
   const disabled = timeCodeLowerThirdIn === ''
@@ -95,7 +95,7 @@ export default function SequenceInput({ onSaveClick }) {
             <LowerThirdContainer>
               <TimecodeInput
                 style={{ margin: '10px 0' }}
-                title="Timecode IN"
+                title="Bauchbinde IN (relativ zur Szene)"
                 inputValue={timeCodeLowerThirdIn}
                 onChange={(event) =>
                   handleTimeCodeChange(event, setTimeCodeLowerThirdIn)
@@ -106,7 +106,7 @@ export default function SequenceInput({ onSaveClick }) {
                 lowerThirdInHasOnlyZeros ||
                 isCorrectTimeCode) ? (
                 <InfoTimeCode hasError>
-                  Timecode fehlt oder fehlerhaft
+                  Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!
                 </InfoTimeCode>
               ) : (
                 <InfoTimeCode>&nbsp;</InfoTimeCode>
@@ -114,18 +114,19 @@ export default function SequenceInput({ onSaveClick }) {
               <TimecodeInput
                 style={{ margin: '10px 0' }}
                 disabled={disabled}
-                title="Timecode OUT"
-                inputValue={timeCodeLowerThirdOut}
+                title="Bauchbinde Länge in ssff (s=sec / f=frame)"
+                placeholder="0800"
+                inputValue={timeCodeLowerThirdLength}
                 onChange={(event) =>
-                  handleTimeCodeChange(event, setTimeCodeLowerThirdOut)
+                  handleTimeCodeChange(event, setTimeCodeLowerThirdLength)
                 }
               />
               {isDirty &&
-              (!timeCodeLowerThirdOut ||
+              (!timeCodeLowerThirdLength ||
                 lowerThirdOutHasOnlyZeros ||
                 isCorrectTimeCode) ? (
                 <InfoTimeCode hasError>
-                  Timecode fehlt oder fehlerhaft
+                  Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!
                 </InfoTimeCode>
               ) : (
                 <InfoTimeCode>&nbsp;</InfoTimeCode>
@@ -183,7 +184,7 @@ export default function SequenceInput({ onSaveClick }) {
         timeCode,
         tag: tags[activeTagIndex],
         timeCodeLowerThirdIn,
-        timeCodeLowerThirdOut,
+        timeCodeLowerThirdLength,
         playerName,
         isActive: true,
       })
@@ -208,13 +209,13 @@ export default function SequenceInput({ onSaveClick }) {
     setActiveTagIndex(null)
     setPlayerName('')
     setTimeCodeLowerThirdIn('')
-    setTimeCodeLowerThirdOut('')
+    setTimeCodeLowerThirdLength('')
   }
 
   function checkCorrectTimeCode() {
     return (
-      Number(timeCodeLowerThirdIn) < Number(timeCodeLowerThirdOut) &&
-      Number(timeCodeLowerThirdOut) > Number(timeCodeLowerThirdIn)
+      Number(timeCodeLowerThirdIn) + Number(timeCodeLowerThirdLength) <=
+      timeCode
     )
   }
 }

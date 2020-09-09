@@ -7,6 +7,7 @@ TimecodeInput.propTypes = {
   index: PropTypes.number,
   inputValue: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
+  placholder: PropTypes.string,
 }
 
 export default function TimecodeInput({
@@ -15,6 +16,7 @@ export default function TimecodeInput({
   inputValue,
   onChange,
   disabled,
+  placeholder = '043017',
 }) {
   return (
     <InputContainer>
@@ -25,9 +27,9 @@ export default function TimecodeInput({
           disabled={disabled}
           onChange={onChange}
           name={title}
+          placeholder={placeholder}
           id={title}
           type="tel"
-          placeholder="043017"
           value={inputValue}
         ></Input>
       </InputWrapper>

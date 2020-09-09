@@ -147,3 +147,30 @@ export function getFormatedTimecode(timecodeAsString) {
   TimecodeCalculator.add(timecodeAsString)
   return TimecodeCalculator.getResult()
 }
+
+export function getLowerThirdTimeCodeIn(index, SequenceCards, lowerThirdIn) {
+  TimecodeCalculator.reset()
+  getTimeCodeFromRelevantCards(index, SequenceCards)
+  TimecodeCalculator.add(lowerThirdIn)
+  return TimecodeCalculator.getResult()
+}
+export function getLowerThirdTimeCodeOut(
+  index,
+  SequenceCards,
+  lowerThirdIn,
+  lowerThirdLength
+) {
+  TimecodeCalculator.reset()
+  getTimeCodeFromRelevantCards(index, SequenceCards)
+  TimecodeCalculator.add(lowerThirdIn)
+  TimecodeCalculator.add(lowerThirdLength)
+  return TimecodeCalculator.getResult()
+}
+
+function getTimeCodeFromRelevantCards(index, SequenceCards) {
+  const relevantCards = SequenceCards.filter(
+    (sequenceCard, sequenceIndex) =>
+      sequenceIndex < index && sequenceCard.isActive
+  )
+  relevantCards.forEach(({ timeCode }) => TimecodeCalculator.add(timeCode))
+}

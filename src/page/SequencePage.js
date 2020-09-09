@@ -2,10 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import SequenceCard from '../components/SequenceCard/SequenceCard'
 import SequenceInput from '../components/SequenceInput/SequenceInput'
-import {
-  getFormatedTimecode,
-  getTimecodeTotalLengthFromSequenceCards,
-} from '../utils/Timecode'
+import { getTimecodeTotalLengthFromSequenceCards } from '../utils/Timecode'
 
 export default function SequencePage() {
   const [sequenceCards, setSequenceCards] = useState([])
@@ -18,20 +15,22 @@ export default function SequencePage() {
             timeCode,
             tag,
             timeCodeLowerThirdIn,
-            timeCodeLowerThirdOut,
+            timeCodeLowerThirdLength,
             playerName,
             isActive,
           },
-          index
+          index,
+          arrayOfAllCards
         ) => (
           <SequenceCard
             description={description}
             key={index}
             index={index}
-            lengthTimeCode={getFormatedTimecode(timeCode)}
+            allSequenceCards={arrayOfAllCards}
+            lengthTimeCode={timeCode}
             tag={tag}
-            timeCodeLowerThirdIn={getFormatedTimecode(timeCodeLowerThirdIn)}
-            timeCodeLowerThirdOut={getFormatedTimecode(timeCodeLowerThirdOut)}
+            timeCodeLowerThirdIn={timeCodeLowerThirdIn}
+            timeCodeLowerThirdLength={timeCodeLowerThirdLength}
             playerName={playerName}
             isActive={isActive}
             handleToggle={handleToggle}
