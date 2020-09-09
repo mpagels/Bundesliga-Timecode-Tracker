@@ -4,19 +4,20 @@ import styled from 'styled-components/macro'
 
 TimecodeInput.propTypes = {
   title: PropTypes.string.isRequired,
-  index: PropTypes.number,
+  disabled: PropTypes.bool,
   inputValue: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   placholder: PropTypes.string,
+  handleBackSpace: PropTypes.func,
 }
 
 export default function TimecodeInput({
   title,
-  index,
   inputValue,
   onChange,
   disabled,
   placeholder = 'MM:SS:FF',
+  handleBackSpace,
 }) {
   return (
     <InputContainer>
@@ -24,6 +25,7 @@ export default function TimecodeInput({
       <br />
       <InputWrapper>
         <Input
+          onKeyDown={handleBackSpace}
           disabled={disabled}
           onChange={onChange}
           name={title}

@@ -66,6 +66,7 @@ export default function SequenceInput({ onSaveClick }) {
         )}
         <TimecodeInput
           title="Szenenlänge"
+          handleBackSpace={handleBackSpace}
           inputValue={formatter(timeCode)}
           onChange={(event) => handleTimeCodeChange(event, setTimeCode)}
         />
@@ -103,6 +104,7 @@ export default function SequenceInput({ onSaveClick }) {
             <LowerThirdContainer>
               <TimecodeInput
                 style={{ margin: '10px 0' }}
+                handleBackSpace={handleBackSpace}
                 title="Bauchbinde IN (relativ zur Szene)"
                 inputValue={formatter(timeCodeLowerThirdIn)}
                 onChange={(event) =>
@@ -123,6 +125,7 @@ export default function SequenceInput({ onSaveClick }) {
               <TimecodeInput
                 style={{ margin: '10px 0' }}
                 disabled={disabled}
+                handleBackSpace={handleBackSpace}
                 title="Bauchbinde Länge in ssff (s=sec / f=frame)"
                 placeholder="SS:FF"
                 inputValue={formatter(timeCodeLowerThirdLength)}
@@ -154,8 +157,33 @@ export default function SequenceInput({ onSaveClick }) {
     </Wrapper>
   )
 
+  function handleBackSpace(event) {
+    if (event.key === 'Backspace' || event.key === 'Process') {
+      if (
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        )
+      ) {
+        const caret = event.target.selectionStart
+        const element = event.target
+        window.requestAnimationFrame(() => {
+          element.selectionStart = caret
+          element.selectionEnd = caret
+        })
+      } else {
+        const caret = event.target.selectionStart
+        const element = event.target
+        window.requestAnimationFrame(() => {
+          element.selectionStart = caret - 1
+          element.selectionEnd = caret - 1
+        })
+      }
+    }
+  }
+
   function handleTimeCodeChange(event, timeCodeSetterFunc) {
     const { value } = event.target
+
     const formattedTimecCode = getTimeCodeUnFormatted(value)
     value.length < 9 &&
       RegExp('^[0-9]*$').test(formattedTimecCode) &&
