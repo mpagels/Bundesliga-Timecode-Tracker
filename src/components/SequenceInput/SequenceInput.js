@@ -49,14 +49,16 @@ export default function SequenceInput({ onSaveClick }) {
       isEmpty={isDirty && (isEmptyScene || (isEmptyEvent && activeTagIndex))}
     >
       <form onSubmit={handleSubmit}>
+        <StyledLabel htmlFor="description">Neue Szene hinzufügen</StyledLabel>
         <SceneDescription
           onChange={(event) =>
             (event.target.value.trim().length !== 0 ||
               description.length === 1) &&
             handleDescriptionChange(event)
           }
-          placeholder="Neue Szene hinzufügen"
+          placeholder="Lewandowski köpft auf Tor..."
           name="description"
+          id="description"
           value={description}
         />
         {isDirty && isEmptyScene && !description ? (
@@ -88,7 +90,7 @@ export default function SequenceInput({ onSaveClick }) {
         </TagContainer>
         {activeTagIndex === null || (
           <>
-            <PlayerName htmlFor="playerName">Spielername:</PlayerName>
+            <StyledLabel htmlFor="playerName">Spielername:</StyledLabel>
             <NameInput
               type="text"
               id="playerName"
@@ -126,7 +128,7 @@ export default function SequenceInput({ onSaveClick }) {
                 style={{ margin: '10px 0' }}
                 disabled={disabled}
                 handleBackSpace={handleBackSpace}
-                title="Bauchbinde Länge in ssff (s=sec / f=frame)"
+                title="Bauchbinde Länge"
                 placeholder="SS:FF"
                 inputValue={formatter(timeCodeLowerThirdLength)}
                 onChange={(event) =>
@@ -334,12 +336,11 @@ const TagContainer = styled.div`
   display: flex;
   margin: 10px 10px 30px 0;
 `
-const PlayerName = styled.label`
+const StyledLabel = styled.label`
   display: inline-block;
   margin-bottom: 2px;
   color: #737373;
   font-size: 18px;
-  font-size: 150%;
 `
 const NameInput = styled.input`
   padding: 20px;

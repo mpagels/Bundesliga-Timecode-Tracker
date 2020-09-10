@@ -51,7 +51,6 @@ const InputContainer = styled.div`
 const Label = styled.label`
   color: #737373;
   display: inline-block;
-  font-size: 150%;
   font-size: 18px;
   margin-bottom: 2px;
 `
@@ -67,7 +66,6 @@ const Input = styled.input`
   border: 0;
   box-shadow: inset 0 0 3px 1px #b8b8b8;
   font-size: 150%;
-  font-size: 18px;
   padding: 15px;
   padding: 20px;
   text-align: right;
