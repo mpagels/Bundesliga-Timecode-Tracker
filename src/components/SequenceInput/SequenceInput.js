@@ -5,6 +5,9 @@ import Tag from '../Tag/Tag'
 import TimecodeInput from '../TimecodeTracker/TimecodeInput'
 import { formatter } from '../../utils/timeCodeFormatter'
 import useIsEmptyScene from './hooks/useIsEmptyScene'
+import useIsEmptyEvent from './hooks/useIsEmptyEvent'
+import useHasZeros from './hooks/useHasZeros'
+import useCheckLowerThirds from './hooks/useCheckLowerThirds'
 
 SequenceInput.propTypes = {
   onSaveClick: PropTypes.func.isRequired,
@@ -44,24 +47,29 @@ export default function SequenceInput({
   }, [updateCard])
 
   const isEmptyScene = useIsEmptyScene(description, timeCode)
-
-  const {
-    isEmptyEvent,
-    isCorrectTimeCode,
-    hasOnlyZeros,
-    lowerThirdInHasOnlyZeros,
-    lowerThirdOutHasOnlyZeros,
-    isCorrectLowerThirdIn,
-    isCorrectLowerThirdLength,
-    disabled,
-    hasCorrectLowerThirdLength,
-  } = getAllChecks(
-    description,
-    timeCode,
+  const isEmptyEvent = useIsEmptyEvent(
     playerName,
     timeCodeLowerThirdIn,
     timeCodeLowerThirdLength
   )
+  const [
+    hasOnlyZeros,
+    lowerThirdInHasOnlyZeros,
+    lowerThirdOutHasOnlyZeros,
+  ] = useHasZeros(timeCode, timeCodeLowerThirdIn, timeCodeLowerThirdLength)
+
+  const [
+    isCorrectLowerThirdIn,
+    isCorrectLowerThirdLength,
+    disabled,
+    hasCorrectLowerThirdLength,
+  ] = useCheckLowerThirds(
+    timeCodeLowerThirdIn,
+    timeCodeLowerThirdLength,
+    timeCode
+  )
+
+  const isCorrectTimeCode = timeCode.length % 2 === 0
 
   return (
     <Wrapper
@@ -224,84 +232,26 @@ export default function SequenceInput({
   function handleSubmit(event) {
     event.preventDefault()
     setIsDirty(true)
-    if (!updateCard) {
-      if (
-        !isEmptyScene &&
-        !hasOnlyZeros &&
-        activeTagIndex === null &&
-        isCorrectTimeCode
-      ) {
-        setIsDirty(false)
-        onSaveClick({
-          description,
-          timeCode,
-          isActive: true,
-        })
-        setDescription('')
-        setTimeCode('')
-        setActiveTagIndex(null)
-      } else if (
-        !(
-          isEmptyScene ||
-          isEmptyEvent ||
-          hasOnlyZeros ||
-          lowerThirdInHasOnlyZeros ||
-          lowerThirdOutHasOnlyZeros ||
-          !isCorrectLowerThirdIn ||
-          !isCorrectLowerThirdLength ||
-          !checkCorrectTimeCode()
-        )
-      ) {
-        onSaveClick({
-          description,
-          timeCode,
-          tag: tags[activeTagIndex],
-          timeCodeLowerThirdIn,
-          timeCodeLowerThirdLength,
-          playerName,
-          isActive: true,
-        })
-        resetState()
-      }
-    } else {
-      if (
-        !isEmptyScene &&
-        !hasOnlyZeros &&
-        activeTagIndex === null &&
-        isCorrectTimeCode
-      ) {
-        setIsDirty(false)
-        handleOnUpdateCard({
-          description,
-          timeCode,
-          isActive: updateCard.isActive,
-        })
-        setDescription('')
-        setTimeCode('')
-        setActiveTagIndex(null)
-      } else if (
-        !(
-          isEmptyScene ||
-          isEmptyEvent ||
-          hasOnlyZeros ||
-          lowerThirdInHasOnlyZeros ||
-          lowerThirdOutHasOnlyZeros ||
-          !isCorrectLowerThirdIn ||
-          !isCorrectLowerThirdLength ||
-          !checkCorrectTimeCode()
-        )
-      ) {
-        handleOnUpdateCard({
-          description,
-          timeCode,
-          tag: tags[activeTagIndex],
-          timeCodeLowerThirdIn,
-          timeCodeLowerThirdLength,
-          playerName,
-          isActive: updateCard.isActive,
-        })
-        resetState()
-      }
+    const doSubmitAction = updateCard ? handleOnUpdateCard : onSaveClick
+
+    if (validationPassedWithNoEvent()) {
+      doSubmitAction({
+        description,
+        timeCode,
+        isActive: true,
+      })
+      resetState()
+    } else if (!validationPassedWithEvent()) {
+      doSubmitAction({
+        description,
+        timeCode,
+        tag: tags[activeTagIndex],
+        timeCodeLowerThirdIn,
+        timeCodeLowerThirdLength,
+        playerName,
+        isActive: true,
+      })
+      resetState()
     }
   }
 
@@ -333,51 +283,26 @@ export default function SequenceInput({
     )
   }
 
-  function getAllChecks(
-    description,
-    timeCode,
-    playerName,
-    timeCodeLowerThirdIn,
-    timeCodeLowerThirdLength
-  ) {
-    const isEmptyScene = description === '' || timeCode === ''
-    const isEmptyEvent =
-      playerName === '' ||
-      timeCodeLowerThirdIn === '' ||
-      timeCodeLowerThirdLength === ''
-
-    const isCorrectTimeCode = timeCode.length % 2 === 0
-
-    const hasOnlyZeros = new RegExp('^[0]+$').test(timeCode)
-    const lowerThirdInHasOnlyZeros = new RegExp('^[0]+$').test(
-      timeCodeLowerThirdIn
+  function validationPassedWithNoEvent() {
+    return (
+      !isEmptyScene &&
+      !hasOnlyZeros &&
+      activeTagIndex === null &&
+      isCorrectTimeCode
     )
-    const lowerThirdOutHasOnlyZeros = new RegExp('^[0]+$').test(
-      timeCodeLowerThirdLength
+  }
+
+  function validationPassedWithEvent() {
+    return (
+      isEmptyScene ||
+      isEmptyEvent ||
+      hasOnlyZeros ||
+      lowerThirdInHasOnlyZeros ||
+      lowerThirdOutHasOnlyZeros ||
+      !isCorrectLowerThirdIn ||
+      !isCorrectLowerThirdLength ||
+      !checkCorrectTimeCode()
     )
-
-    const isCorrectLowerThirdIn =
-      timeCodeLowerThirdIn.length % 2 === 0 && timeCodeLowerThirdIn !== ''
-    const isCorrectLowerThirdLength =
-      timeCodeLowerThirdLength.length % 2 === 0 &&
-      timeCodeLowerThirdLength !== ''
-
-    const disabled = timeCodeLowerThirdIn === ''
-
-    const hasCorrectLowerThirdLength = checkCorrectTimeCode()
-
-    return {
-      isEmptyScene,
-      isEmptyEvent,
-      isCorrectTimeCode,
-      hasOnlyZeros,
-      lowerThirdInHasOnlyZeros,
-      lowerThirdOutHasOnlyZeros,
-      isCorrectLowerThirdIn,
-      isCorrectLowerThirdLength,
-      disabled,
-      hasCorrectLowerThirdLength,
-    }
   }
 }
 

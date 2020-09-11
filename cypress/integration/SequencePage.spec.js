@@ -65,7 +65,7 @@ context('SequencePage', () => {
     })
   })
 
-  it.only('tests description and timecode input and correct addition after every save, then deactivate the first sequence', () => {
+  it('tests description and timecode input and correct addition after every save, then deactivate the first sequence', () => {
     mockData.forEach((data, index) => {
       cy.get('textarea')
         .type(data.description)
