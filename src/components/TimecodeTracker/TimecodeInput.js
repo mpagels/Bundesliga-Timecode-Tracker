@@ -8,7 +8,7 @@ TimecodeInput.propTypes = {
   inputValue: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   placholder: PropTypes.string,
-  handleBackSpace: PropTypes.func,
+  onBackSpace: PropTypes.func,
 }
 
 export default function TimecodeInput({
@@ -17,7 +17,7 @@ export default function TimecodeInput({
   onChange,
   disabled,
   placeholder = 'MM:SS:FF',
-  handleBackSpace,
+  onBackSpace,
 }) {
   return (
     <InputContainer>
@@ -25,7 +25,7 @@ export default function TimecodeInput({
       <br />
       <InputWrapper>
         <Input
-          onKeyDown={handleBackSpace}
+          onKeyDown={onBackSpace}
           disabled={disabled}
           onChange={onChange}
           name={title}

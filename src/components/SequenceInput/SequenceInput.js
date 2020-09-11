@@ -4,13 +4,18 @@ import styled from 'styled-components/macro'
 import Tag from '../Tag/Tag'
 import TimecodeInput from '../TimecodeTracker/TimecodeInput'
 import { formatter } from '../../utils/timeCodeFormatter'
+import preventCursorJumpToEnd from '../../utils/preventCursorJumpToEnd'
 import useIsEmptyScene from './hooks/useIsEmptyScene'
 import useIsEmptyEvent from './hooks/useIsEmptyEvent'
 import useHasZeros from './hooks/useHasZeros'
 import useCheckLowerThirds from './hooks/useCheckLowerThirds'
+import ValidationError from './ValidationError'
 
 SequenceInput.propTypes = {
   onSaveClick: PropTypes.func.isRequired,
+  updateCard: PropTypes.string,
+  handleOnUpdateCard: PropTypes.func,
+  onUpdateCancel: PropTypes.func,
 }
 
 export default function SequenceInput({
@@ -90,22 +95,20 @@ export default function SequenceInput({
           id="description"
           value={description}
         />
-        {isDirty && isEmptyScene && !description ? (
-          <InfoScene hasError>Szenenbeschreibung fehlt</InfoScene>
-        ) : (
-          <InfoScene>&nbsp;</InfoScene>
-        )}
+        <ValidationError
+          errorMessage="Szenenbeschreibung fehlt"
+          hasError={validateDescription()}
+        />
         <TimecodeInput
           title="Szenenlänge"
-          handleBackSpace={handleBackSpace}
+          onBackSpace={preventCursorJumpToEnd}
           inputValue={formatter(timeCode)}
           onChange={(event) => handleTimeCodeChange(event, setTimeCode)}
         />
-        {isDirty && (!timeCode || hasOnlyZeros || !isCorrectTimeCode) ? (
-          <InfoTimeCode hasError>Timecode fehlt oder fehlerhaft</InfoTimeCode>
-        ) : (
-          <InfoTimeCode>&nbsp;</InfoTimeCode>
-        )}
+        <ValidationError
+          errorMessage="Timecode fehlt oder ist fehlerhaft"
+          hasError={validateSceneLength()}
+        />
         <TagContainer>
           {tags.map((tag, index) => (
             <Tag
@@ -127,36 +130,28 @@ export default function SequenceInput({
               value={playerName}
               onChange={(event) => setPlayerName(event.target.value)}
             ></NameInput>
-            {isDirty && isEmptyEvent && !playerName ? (
-              <InfoScene hasError>Name fehlt</InfoScene>
-            ) : (
-              <InfoScene>&nbsp;</InfoScene>
-            )}
+            <ValidationError
+              errorMessage="Name fehlt"
+              hasError={isDirty && isEmptyEvent && !playerName}
+            />
             <LowerThirdContainer>
               <TimecodeInput
                 style={{ margin: '10px 0' }}
-                handleBackSpace={handleBackSpace}
+                onBackSpace={preventCursorJumpToEnd}
                 title="Bauchbinde IN (relativ zur Szene)"
                 inputValue={formatter(timeCodeLowerThirdIn)}
                 onChange={(event) =>
                   handleTimeCodeChange(event, setTimeCodeLowerThirdIn)
                 }
               />
-              {isDirty &&
-              (!timeCodeLowerThirdIn ||
-                lowerThirdInHasOnlyZeros ||
-                !isCorrectLowerThirdIn ||
-                !hasCorrectLowerThirdLength) ? (
-                <InfoTimeCode hasError>
-                  Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!
-                </InfoTimeCode>
-              ) : (
-                <InfoTimeCode>&nbsp;</InfoTimeCode>
-              )}
+              <ValidationError
+                errorMessage="Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!"
+                hasError={validateLowerThirdIn()}
+              />
               <TimecodeInput
                 style={{ margin: '10px 0' }}
                 disabled={disabled}
-                handleBackSpace={handleBackSpace}
+                onBackSpace={preventCursorJumpToEnd}
                 title="Bauchbinde Länge"
                 placeholder="SS:FF"
                 inputValue={formatter(timeCodeLowerThirdLength)}
@@ -164,17 +159,10 @@ export default function SequenceInput({
                   handleTimeCodeChange(event, setTimeCodeLowerThirdLength)
                 }
               />
-              {isDirty &&
-              (!timeCodeLowerThirdLength ||
-                lowerThirdOutHasOnlyZeros ||
-                !isCorrectLowerThirdLength ||
-                !hasCorrectLowerThirdLength) ? (
-                <InfoTimeCode hasError>
-                  Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!
-                </InfoTimeCode>
-              ) : (
-                <InfoTimeCode>&nbsp;</InfoTimeCode>
-              )}
+              <ValidationError
+                errorMessage="Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!"
+                hasError={validateLowerThirdLength()}
+              />
             </LowerThirdContainer>
           </>
         )}
@@ -188,41 +176,12 @@ export default function SequenceInput({
     </Wrapper>
   )
 
-  function handleBackSpace(event) {
-    if (event.key === 'Backspace' || event.key === 'Process') {
-      if (
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        )
-      ) {
-        const caret = event.target.selectionStart
-        const element = event.target
-        window.requestAnimationFrame(() => {
-          element.selectionStart = caret
-          element.selectionEnd = caret
-        })
-      } else {
-        const caret = event.target.selectionStart
-        const element = event.target
-        window.requestAnimationFrame(() => {
-          element.selectionStart = caret - 1
-          element.selectionEnd = caret - 1
-        })
-      }
-    }
-  }
-
   function handleTimeCodeChange(event, timeCodeSetterFunc) {
     const { value } = event.target
-
     const formattedTimecCode = getTimeCodeUnFormatted(value)
     value.length < 9 &&
       RegExp('^[0-9]*$').test(formattedTimecCode) &&
       timeCodeSetterFunc(formattedTimecCode)
-  }
-
-  function getTimeCodeUnFormatted(timeCode) {
-    return timeCode.split(':').join('')
   }
 
   function handleDescriptionChange(event) {
@@ -241,7 +200,7 @@ export default function SequenceInput({
         isActive: true,
       })
       resetState()
-    } else if (!validationPassedWithEvent()) {
+    } else if (validationPassedWithEvent()) {
       doSubmitAction({
         description,
         timeCode,
@@ -283,6 +242,38 @@ export default function SequenceInput({
     )
   }
 
+  function getTimeCodeUnFormatted(timeCode) {
+    return timeCode.split(':').join('')
+  }
+
+  function validateDescription() {
+    return isDirty && isEmptyScene && !description
+  }
+
+  function validateSceneLength() {
+    return isDirty && (!timeCode || hasOnlyZeros || !isCorrectTimeCode)
+  }
+
+  function validateLowerThirdIn() {
+    return (
+      isDirty &&
+      (!timeCodeLowerThirdIn ||
+        lowerThirdInHasOnlyZeros ||
+        !isCorrectLowerThirdIn ||
+        !hasCorrectLowerThirdLength)
+    )
+  }
+
+  function validateLowerThirdLength() {
+    return (
+      isDirty &&
+      (!timeCodeLowerThirdLength ||
+        lowerThirdOutHasOnlyZeros ||
+        !isCorrectLowerThirdLength ||
+        !hasCorrectLowerThirdLength)
+    )
+  }
+
   function validationPassedWithNoEvent() {
     return (
       !isEmptyScene &&
@@ -293,7 +284,7 @@ export default function SequenceInput({
   }
 
   function validationPassedWithEvent() {
-    return (
+    return !(
       isEmptyScene ||
       isEmptyEvent ||
       hasOnlyZeros ||
@@ -355,16 +346,6 @@ const Save = styled(Button)`
   &:focus {
     border: 2px solid green;
   }
-`
-const InfoScene = styled.span`
-  color: ${(props) =>
-    props.hasError ? '#cb6870' : 'var(----background-grey)'};
-  font-size: 12px;
-`
-const InfoTimeCode = styled(InfoScene)`
-  color: ${(props) =>
-    props.hasError ? '#cb6870' : 'var(----background-grey)'};
-  font-size: 12px;
 `
 const TagContainer = styled.div`
   display: flex;
