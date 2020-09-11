@@ -6,6 +6,9 @@ import { getTimecodeTotalLengthFromSequenceCards } from '../utils/Timecode'
 
 export default function SequencePage() {
   const [sequenceCards, setSequenceCards] = useState([])
+  const [updateCard, setUpdateCard] = useState()
+  const [updateIndex, setUpdateIndex] = useState()
+
   return (
     <>
       {sequenceCards.map(
@@ -34,11 +37,17 @@ export default function SequencePage() {
             playerName={playerName}
             isActive={isActive}
             handleToggle={handleToggle}
+            handleOnEdit={() => handleOnEdit(index)}
           />
         )
       )}
 
-      <SequenceInput onSaveClick={onSave} />
+      <SequenceInput
+        onSaveClick={onSave}
+        updateCard={updateCard}
+        handleOnUpdateCard={handleOnUpdateCard}
+        onUpdateCancel={onUpdateCancel}
+      />
 
       <Footer>
         {sequenceCards.length === 0
@@ -60,6 +69,24 @@ export default function SequencePage() {
       sequence,
       ...sequenceCards.slice(index + 1),
     ])
+  }
+
+  function handleOnEdit(index) {
+    setUpdateCard(sequenceCards[index])
+    setUpdateIndex(index)
+  }
+
+  function handleOnUpdateCard(updatedCard) {
+    setSequenceCards([
+      ...sequenceCards.slice(0, updateIndex),
+      updatedCard,
+      ...sequenceCards.slice(updateIndex + 1),
+    ])
+    setUpdateCard('')
+  }
+
+  function onUpdateCancel() {
+    setUpdateCard('')
   }
 }
 

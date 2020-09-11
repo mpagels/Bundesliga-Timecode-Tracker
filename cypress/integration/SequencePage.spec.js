@@ -65,7 +65,7 @@ context('SequencePage', () => {
     })
   })
 
-  it('tests description and timecode input and correct addition after every save, then deactivate the first sequence', () => {
+  it.only('tests description and timecode input and correct addition after every save, then deactivate the first sequence', () => {
     mockData.forEach((data, index) => {
       cy.get('textarea')
         .type(data.description)
@@ -76,7 +76,7 @@ context('SequencePage', () => {
       cy.get('@saveButton').click()
       cy.get('footer').should('contain', data.timeCodeResult)
     })
-    cy.get('svg').first().click()
+    cy.get('[data-cy=playPauseButton]').first().click()
     cy.get('footer').should('contain', '00:01:48:19')
   })
 
