@@ -178,10 +178,10 @@ export default function SequenceInput({
 
   function handleTimeCodeChange(event, timeCodeSetterFunc) {
     const { value } = event.target
-    const formattedTimecCode = getTimeCodeUnFormatted(value)
+    const formattedTimeCode = getTimeCodeUnFormatted(value)
     value.length < 9 &&
-      RegExp('^[0-9]*$').test(formattedTimecCode) &&
-      timeCodeSetterFunc(formattedTimecCode)
+      RegExp('^[0-9]*$').test(formattedTimeCode) &&
+      timeCodeSetterFunc(formattedTimeCode)
   }
 
   function handleDescriptionChange(event) {

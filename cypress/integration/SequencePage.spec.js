@@ -83,7 +83,9 @@ context('SequencePage', () => {
   it('tests a complete empty save try', () => {
     cy.get('@saveButton').click()
     cy.get('span').first().should('contain', 'Szenenbeschreibung fehlt')
-    cy.get('span').last().should('contain', 'Timecode fehlt oder fehlerhaft')
+    cy.get('span')
+      .last()
+      .should('contain', 'Timecode fehlt oder ist fehlerhaft')
   })
 
   it('tests if the error message appears if only the textarea is empty', () => {
@@ -99,7 +101,9 @@ context('SequencePage', () => {
       .type(mockData[0].description)
       .should('have.value', mockData[0].description)
     cy.get('@saveButton').click()
-    cy.get('span').last().should('contain', 'Timecode fehlt oder fehlerhaft')
+    cy.get('span')
+      .last()
+      .should('contain', 'Timecode fehlt oder ist fehlerhaft')
   })
 
   it('tests when at first the timecode input was forgotten, then filled with timecode and saved', () => {
@@ -107,7 +111,9 @@ context('SequencePage', () => {
       .type(mockData[0].description)
       .should('have.value', mockData[0].description)
     cy.get('@saveButton').click()
-    cy.get('span').last().should('contain', 'Timecode fehlt oder fehlerhaft')
+    cy.get('span')
+      .last()
+      .should('contain', 'Timecode fehlt oder ist fehlerhaft')
     cy.get('input')
       .type(mockData[0].timeCode)
       .should('have.value', mockData[0].timeCodeFormated)
@@ -133,7 +139,9 @@ context('SequencePage', () => {
   it('tests the delete button after an empty save ', () => {
     cy.get('@saveButton').click()
     cy.get('span').first().should('contain', 'Szenenbeschreibung fehlt')
-    cy.get('span').last().should('contain', 'Timecode fehlt oder fehlerhaft')
+    cy.get('span')
+      .last()
+      .should('contain', 'Timecode fehlt oder ist fehlerhaft')
     cy.get('@cancelButton').click()
     cy.get('span')
       .last()
@@ -168,7 +176,7 @@ context('SequencePage', () => {
       .first()
       .should('contain', 'Szenenbeschreibung fehlt')
       .siblings()
-      .should('contain', 'Timecode fehlt oder fehlerhaft')
+      .should('contain', 'Timecode fehlt oder ist fehlerhaft')
       .next()
       .should('contain', 'Name fehlt')
       .next()
@@ -257,7 +265,7 @@ context('SequencePage', () => {
       .should('have.value', '35:15')
   })
 
-  it.only('adds a sequence without event, then hit edit and adds a "tor" event', () => {
+  it('adds a sequence without event, then hit edit and adds a "tor" event', () => {
     cy.get('textarea')
       .type(mockData[0].description)
       .should('have.value', mockData[0].description)
