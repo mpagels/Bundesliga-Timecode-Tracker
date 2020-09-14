@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import SequenceCard from '../components/SequenceCard/SequenceCard'
 import SequenceInput from '../components/SequenceInput/SequenceInput'
@@ -8,6 +8,13 @@ export default function SequencePage() {
   const [sequenceCards, setSequenceCards] = useState([])
   const [updateCard, setUpdateCard] = useState()
   const [updateIndex, setUpdateIndex] = useState()
+
+  useEffect(() => {
+    const sequencesFromLocalStorage = JSON.parse(
+      localStorage.getItem('sequences')
+    )
+    sequencesFromLocalStorage && setSequenceCards(sequencesFromLocalStorage)
+  }, [])
 
   return (
     <>
@@ -58,30 +65,67 @@ export default function SequencePage() {
   )
 
   function onSave(sequence) {
-    setSequenceCards([...sequenceCards, sequence])
+    const sequencesFromLocalStorage = JSON.parse(
+      localStorage.getItem('sequences')
+    )
+    if (!sequencesFromLocalStorage) {
+      localStorage.setItem('sequences', JSON.stringify([sequence]))
+      setSequenceCards([sequence])
+    } else {
+      localStorage.setItem(
+        'sequences',
+        JSON.stringify([...sequencesFromLocalStorage, sequence])
+      )
+      setSequenceCards([...sequencesFromLocalStorage, sequence])
+    }
   }
 
   function handleToggle(index) {
-    const sequence = sequenceCards[index]
+    const sequencesFromLocalStorage = JSON.parse(
+      localStorage.getItem('sequences')
+    )
+
+    const sequence = sequencesFromLocalStorage[index]
     sequence.isActive = !sequence.isActive
-    setSequenceCards([
-      ...sequenceCards.slice(0, index),
-      sequence,
-      ...sequenceCards.slice(index + 1),
-    ])
+
+    if (!sequencesFromLocalStorage) {
+      localStorage.setItem('sequences', JSON.stringify([sequence]))
+      setSequenceCards([sequence])
+    } else {
+      const toSave = [
+        ...sequencesFromLocalStorage.slice(0, index),
+        sequence,
+        ...sequencesFromLocalStorage.slice(index + 1),
+      ]
+      localStorage.setItem('sequences', JSON.stringify(toSave))
+      setSequenceCards(toSave)
+    }
   }
 
   function handleOnEdit(index) {
-    setUpdateCard(sequenceCards[index])
+    const sequencesFromLocalStorage = JSON.parse(
+      localStorage.getItem('sequences')
+    )
+    setUpdateCard(sequencesFromLocalStorage[index])
     setUpdateIndex(index)
   }
 
   function handleOnUpdateCard(updatedCard) {
-    setSequenceCards([
-      ...sequenceCards.slice(0, updateIndex),
-      updatedCard,
-      ...sequenceCards.slice(updateIndex + 1),
-    ])
+    const sequencesFromLocalStorage = JSON.parse(
+      localStorage.getItem('sequences')
+    )
+    if (!sequencesFromLocalStorage) {
+      localStorage.setItem('sequences', JSON.stringify([updatedCard]))
+      setSequenceCards([updatedCard])
+    } else {
+      const toSave = [
+        ...sequencesFromLocalStorage.slice(0, updateIndex),
+        updatedCard,
+        ...sequencesFromLocalStorage.slice(updateIndex + 1),
+      ]
+      localStorage.setItem('sequences', JSON.stringify(toSave))
+      setSequenceCards(toSave)
+    }
     setUpdateCard('')
   }
 
