@@ -295,4 +295,68 @@ context('SequencePage', () => {
     cy.get('section').first().contains('Bauchbinde IN:00:00:15:00')
     cy.get('section').first().contains('Bauchbinde OUT:00:00:23:00')
   })
+
+  it('tests if the delete data button is deactivated at start', () => {
+    cy.get('[data-cy=deleteStorageButton]').should(
+      'have.css',
+      'fill',
+      'rgba(0, 0, 0, 0.3)'
+    )
+  })
+
+  it('tests if the delete data button is activated after adding a sequence', () => {
+    cy.get('[data-cy=deleteStorageButton]').should(
+      'have.css',
+      'fill',
+      'rgba(0, 0, 0, 0.3)'
+    )
+    cy.get('textarea')
+      .type(mockData[0].description)
+      .should('have.value', mockData[0].description)
+    cy.get('input')
+      .type(mockData[0].timeCode)
+      .should('have.value', mockData[0].timeCodeFormated)
+    cy.get('@saveButton').click()
+    cy.get('input')
+      .type(mockData[0].timeCode)
+      .should('have.value', mockData[0].timeCodeFormated)
+    cy.get('[data-cy=deleteStorageButton]').should(
+      'not.have.css',
+      'fill',
+      'rgba(0, 0, 0, 0.3)'
+    )
+  })
+
+  it('tests if the delete data button is functional after adding a sequence', () => {
+    cy.get('[data-cy=deleteStorageButton]').should(
+      'have.css',
+      'fill',
+      'rgba(0, 0, 0, 0.3)'
+    )
+    cy.get('textarea')
+      .type(mockData[0].description)
+      .should('have.value', mockData[0].description)
+    cy.get('input')
+      .type(mockData[0].timeCode)
+      .should('have.value', mockData[0].timeCodeFormated)
+    cy.get('@saveButton').click()
+    cy.get('input')
+      .type(mockData[0].timeCode)
+      .should('have.value', mockData[0].timeCodeFormated)
+    cy.get('[data-cy=deleteStorageButton]').should(
+      'not.have.css',
+      'fill',
+      'rgba(0, 0, 0, 0.3)'
+    )
+    cy.get('[data-cy=deleteStorageButton]').click()
+    cy.get('button').contains('JA').click()
+    cy.contains('Mbabu schaltet sich vorne ein, Alaba klärt zur Ecke.').should(
+      'not.be.visible'
+    )
+    cy.get('[data-cy=deleteStorageButton]').should(
+      'have.css',
+      'fill',
+      'rgba(0, 0, 0, 0.3)'
+    )
+  })
 })
