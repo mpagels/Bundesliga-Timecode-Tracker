@@ -1,16 +1,31 @@
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components/macro'
 import Tag from '../Tag/Tag'
 import TimecodeInput from '../TimecodeTracker/TimecodeInput'
 import { formatter } from '../../utils/timeCodeFormatter'
+import preventCursorJumpToEnd from '../../utils/preventCursorJumpToEnd'
+import useIsEmptyScene from './hooks/useIsEmptyScene'
+import useIsEmptyEvent from './hooks/useIsEmptyEvent'
+import useHasZeros from './hooks/useHasZeros'
+import useCheckLowerThirds from './hooks/useCheckLowerThirds'
+import ValidationError from './ValidationError'
 
 SequenceInput.propTypes = {
   onSaveClick: PropTypes.func.isRequired,
+  updateCard: PropTypes.string,
+  handleOnUpdateCard: PropTypes.func,
+  onUpdateCancel: PropTypes.func,
 }
 
-export default function SequenceInput({ onSaveClick }) {
+export default function SequenceInput({
+  onSaveClick,
+  updateCard = '',
+  handleOnUpdateCard,
+  onUpdateCancel,
+}) {
   const tags = ['Tor', 'Rote Karte']
+
   const [activeTagIndex, setActiveTagIndex] = useState(null)
   const [description, setDescription] = useState('')
   const [timeCode, setTimeCode] = useState('')
@@ -19,37 +34,56 @@ export default function SequenceInput({ onSaveClick }) {
   const [timeCodeLowerThirdIn, setTimeCodeLowerThirdIn] = useState('')
   const [timeCodeLowerThirdLength, setTimeCodeLowerThirdLength] = useState('')
 
-  const isEmptyScene = description === '' || timeCode === ''
-  const isEmptyEvent =
-    playerName === '' ||
-    timeCodeLowerThirdIn === '' ||
-    timeCodeLowerThirdLength === ''
+  useEffect(() => {
+    setDescription(updateCard ? updateCard.description : '')
+    setTimeCode(updateCard ? updateCard.timeCode : '')
+    setPlayerName(updateCard.playerName ? updateCard.playerName : '')
+    setActiveTagIndex(
+      updateCard.tag ? (updateCard.tag === 'Tor' ? 0 : 1) : null
+    )
+    setTimeCodeLowerThirdIn(
+      updateCard.timeCodeLowerThirdIn ? updateCard.timeCodeLowerThirdIn : ''
+    )
+    setTimeCodeLowerThirdLength(
+      updateCard.timeCodeLowerThirdLength
+        ? updateCard.timeCodeLowerThirdLength
+        : ''
+    )
+  }, [updateCard])
 
-  const isCorrectTimeCode = timeCode.length % 2 === 0
-
-  const hasOnlyZeros = new RegExp('^[0]+$').test(timeCode)
-  const lowerThirdInHasOnlyZeros = new RegExp('^[0]+$').test(
-    timeCodeLowerThirdIn
-  )
-  const lowerThirdOutHasOnlyZeros = new RegExp('^[0]+$').test(
+  const isEmptyScene = useIsEmptyScene(description, timeCode)
+  const isEmptyEvent = useIsEmptyEvent(
+    playerName,
+    timeCodeLowerThirdIn,
     timeCodeLowerThirdLength
   )
+  const [
+    hasOnlyZeros,
+    lowerThirdInHasOnlyZeros,
+    lowerThirdOutHasOnlyZeros,
+  ] = useHasZeros(timeCode, timeCodeLowerThirdIn, timeCodeLowerThirdLength)
 
-  const isCorrectLowerThirdIn =
-    timeCodeLowerThirdIn.length % 2 === 0 && timeCodeLowerThirdIn !== ''
-  const isCorrectLowerThirdLength =
-    timeCodeLowerThirdLength.length % 2 === 0 && timeCodeLowerThirdLength !== ''
+  const [
+    isCorrectLowerThirdIn,
+    isCorrectLowerThirdLength,
+    disabled,
+    hasCorrectLowerThirdLength,
+  ] = useCheckLowerThirds(
+    timeCodeLowerThirdIn,
+    timeCodeLowerThirdLength,
+    timeCode
+  )
 
-  const disabled = timeCodeLowerThirdIn === ''
-
-  const hasCorrectLowerThirdLength = checkCorrectTimeCode()
+  const isCorrectTimeCode = timeCode.length % 2 === 0
 
   return (
     <Wrapper
       isEmpty={isDirty && (isEmptyScene || (isEmptyEvent && activeTagIndex))}
     >
       <form onSubmit={handleSubmit}>
-        <StyledLabel htmlFor="description">Neue Szene hinzufügen</StyledLabel>
+        <StyledLabel htmlFor="description">
+          {updateCard ? 'Szene bearbeiten' : 'Neue Szene hinzufügen'}
+        </StyledLabel>
         <SceneDescription
           onChange={(event) =>
             (event.target.value.trim().length !== 0 ||
@@ -61,22 +95,20 @@ export default function SequenceInput({ onSaveClick }) {
           id="description"
           value={description}
         />
-        {isDirty && isEmptyScene && !description ? (
-          <InfoScene hasError>Szenenbeschreibung fehlt</InfoScene>
-        ) : (
-          <InfoScene>&nbsp;</InfoScene>
-        )}
+        <ValidationError
+          errorMessage="Szenenbeschreibung fehlt"
+          hasError={validateDescription()}
+        />
         <TimecodeInput
           title="Szenenlänge"
-          handleBackSpace={handleBackSpace}
+          onBackSpace={preventCursorJumpToEnd}
           inputValue={formatter(timeCode)}
           onChange={(event) => handleTimeCodeChange(event, setTimeCode)}
         />
-        {isDirty && (!timeCode || hasOnlyZeros || !isCorrectTimeCode) ? (
-          <InfoTimeCode hasError>Timecode fehlt oder fehlerhaft</InfoTimeCode>
-        ) : (
-          <InfoTimeCode>&nbsp;</InfoTimeCode>
-        )}
+        <ValidationError
+          errorMessage="Timecode fehlt oder ist fehlerhaft"
+          hasError={validateSceneLength()}
+        />
         <TagContainer>
           {tags.map((tag, index) => (
             <Tag
@@ -98,36 +130,28 @@ export default function SequenceInput({ onSaveClick }) {
               value={playerName}
               onChange={(event) => setPlayerName(event.target.value)}
             ></NameInput>
-            {isDirty && isEmptyEvent && !playerName ? (
-              <InfoScene hasError>Name fehlt</InfoScene>
-            ) : (
-              <InfoScene>&nbsp;</InfoScene>
-            )}
+            <ValidationError
+              errorMessage="Name fehlt"
+              hasError={isDirty && isEmptyEvent && !playerName}
+            />
             <LowerThirdContainer>
               <TimecodeInput
                 style={{ margin: '10px 0' }}
-                handleBackSpace={handleBackSpace}
+                onBackSpace={preventCursorJumpToEnd}
                 title="Bauchbinde IN (relativ zur Szene)"
                 inputValue={formatter(timeCodeLowerThirdIn)}
                 onChange={(event) =>
                   handleTimeCodeChange(event, setTimeCodeLowerThirdIn)
                 }
               />
-              {isDirty &&
-              (!timeCodeLowerThirdIn ||
-                lowerThirdInHasOnlyZeros ||
-                !isCorrectLowerThirdIn ||
-                !hasCorrectLowerThirdLength) ? (
-                <InfoTimeCode hasError>
-                  Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!
-                </InfoTimeCode>
-              ) : (
-                <InfoTimeCode>&nbsp;</InfoTimeCode>
-              )}
+              <ValidationError
+                errorMessage="Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!"
+                hasError={validateLowerThirdIn()}
+              />
               <TimecodeInput
                 style={{ margin: '10px 0' }}
                 disabled={disabled}
-                handleBackSpace={handleBackSpace}
+                onBackSpace={preventCursorJumpToEnd}
                 title="Bauchbinde Länge"
                 placeholder="SS:FF"
                 inputValue={formatter(timeCodeLowerThirdLength)}
@@ -135,65 +159,29 @@ export default function SequenceInput({ onSaveClick }) {
                   handleTimeCodeChange(event, setTimeCodeLowerThirdLength)
                 }
               />
-              {isDirty &&
-              (!timeCodeLowerThirdLength ||
-                lowerThirdOutHasOnlyZeros ||
-                !isCorrectLowerThirdLength ||
-                !hasCorrectLowerThirdLength) ? (
-                <InfoTimeCode hasError>
-                  Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!
-                </InfoTimeCode>
-              ) : (
-                <InfoTimeCode>&nbsp;</InfoTimeCode>
-              )}
+              <ValidationError
+                errorMessage="Timecode fehlt, ist fehlerhaft oder ist insgesamt zu lang!"
+                hasError={validateLowerThirdLength()}
+              />
             </LowerThirdContainer>
           </>
         )}
         <Actions>
-          <Delete onClick={onDeleteClick} type="reset">
+          <Delete onClick={onCancelClick} type="reset">
             ABBRECHEN
           </Delete>
-          <Save>SPEICHERN</Save>
+          {updateCard ? <Save>AKTUALISIEREN</Save> : <Save>SPEICHERN</Save>}
         </Actions>
       </form>
     </Wrapper>
   )
 
-  function handleBackSpace(event) {
-    if (event.key === 'Backspace' || event.key === 'Process') {
-      if (
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        )
-      ) {
-        const caret = event.target.selectionStart
-        const element = event.target
-        window.requestAnimationFrame(() => {
-          element.selectionStart = caret
-          element.selectionEnd = caret
-        })
-      } else {
-        const caret = event.target.selectionStart
-        const element = event.target
-        window.requestAnimationFrame(() => {
-          element.selectionStart = caret - 1
-          element.selectionEnd = caret - 1
-        })
-      }
-    }
-  }
-
   function handleTimeCodeChange(event, timeCodeSetterFunc) {
     const { value } = event.target
-
-    const formattedTimecCode = getTimeCodeUnFormatted(value)
+    const formattedTimeCode = getTimeCodeUnFormatted(value)
     value.length < 9 &&
-      RegExp('^[0-9]*$').test(formattedTimecCode) &&
-      timeCodeSetterFunc(formattedTimecCode)
-  }
-
-  function getTimeCodeUnFormatted(timeCode) {
-    return timeCode.split(':').join('')
+      RegExp('^[0-9]*$').test(formattedTimeCode) &&
+      timeCodeSetterFunc(formattedTimeCode)
   }
 
   function handleDescriptionChange(event) {
@@ -203,35 +191,17 @@ export default function SequenceInput({ onSaveClick }) {
   function handleSubmit(event) {
     event.preventDefault()
     setIsDirty(true)
+    const doSubmitAction = updateCard ? handleOnUpdateCard : onSaveClick
 
-    if (
-      !isEmptyScene &&
-      !hasOnlyZeros &&
-      activeTagIndex === null &&
-      isCorrectTimeCode
-    ) {
-      setIsDirty(false)
-      onSaveClick({
+    if (validationPassedWithNoEvent()) {
+      doSubmitAction({
         description,
         timeCode,
         isActive: true,
       })
-      setDescription('')
-      setTimeCode('')
-      setActiveTagIndex(null)
-    } else if (
-      !(
-        isEmptyScene ||
-        isEmptyEvent ||
-        hasOnlyZeros ||
-        lowerThirdInHasOnlyZeros ||
-        lowerThirdOutHasOnlyZeros ||
-        !isCorrectLowerThirdIn ||
-        !isCorrectLowerThirdLength ||
-        !checkCorrectTimeCode()
-      )
-    ) {
-      onSaveClick({
+      resetState()
+    } else if (validationPassedWithEvent()) {
+      doSubmitAction({
         description,
         timeCode,
         tag: tags[activeTagIndex],
@@ -249,9 +219,10 @@ export default function SequenceInput({ onSaveClick }) {
     setIsDirty(false)
   }
 
-  function onDeleteClick(event) {
+  function onCancelClick(event) {
     event.preventDefault()
     resetState()
+    updateCard && onUpdateCancel()
   }
 
   function resetState() {
@@ -268,6 +239,60 @@ export default function SequenceInput({ onSaveClick }) {
     return (
       Number(timeCodeLowerThirdIn) + Number(timeCodeLowerThirdLength) <=
       timeCode
+    )
+  }
+
+  function getTimeCodeUnFormatted(timeCode) {
+    return timeCode.split(':').join('')
+  }
+
+  function validateDescription() {
+    return isDirty && isEmptyScene && !description
+  }
+
+  function validateSceneLength() {
+    return isDirty && (!timeCode || hasOnlyZeros || !isCorrectTimeCode)
+  }
+
+  function validateLowerThirdIn() {
+    return (
+      isDirty &&
+      (!timeCodeLowerThirdIn ||
+        lowerThirdInHasOnlyZeros ||
+        !isCorrectLowerThirdIn ||
+        !hasCorrectLowerThirdLength)
+    )
+  }
+
+  function validateLowerThirdLength() {
+    return (
+      isDirty &&
+      (!timeCodeLowerThirdLength ||
+        lowerThirdOutHasOnlyZeros ||
+        !isCorrectLowerThirdLength ||
+        !hasCorrectLowerThirdLength)
+    )
+  }
+
+  function validationPassedWithNoEvent() {
+    return (
+      !isEmptyScene &&
+      !hasOnlyZeros &&
+      activeTagIndex === null &&
+      isCorrectTimeCode
+    )
+  }
+
+  function validationPassedWithEvent() {
+    return !(
+      isEmptyScene ||
+      isEmptyEvent ||
+      hasOnlyZeros ||
+      lowerThirdInHasOnlyZeros ||
+      lowerThirdOutHasOnlyZeros ||
+      !isCorrectLowerThirdIn ||
+      !isCorrectLowerThirdLength ||
+      !checkCorrectTimeCode()
     )
   }
 }
@@ -321,16 +346,6 @@ const Save = styled(Button)`
   &:focus {
     border: 2px solid green;
   }
-`
-const InfoScene = styled.span`
-  color: ${(props) =>
-    props.hasError ? '#cb6870' : 'var(----background-grey)'};
-  font-size: 12px;
-`
-const InfoTimeCode = styled(InfoScene)`
-  color: ${(props) =>
-    props.hasError ? '#cb6870' : 'var(----background-grey)'};
-  font-size: 12px;
 `
 const TagContainer = styled.div`
   display: flex;

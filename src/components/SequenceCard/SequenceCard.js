@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import { ReactComponent as PlayButton } from '../../assets/play-button.svg'
 import { ReactComponent as PauseButton } from '../../assets/pause-button.svg'
+import { ReactComponent as EditButton } from '../../assets/edit-button.svg'
 import PropTypes from 'prop-types'
 import {
   getFormatedTimecode,
@@ -33,16 +34,24 @@ export default function SequenceCard({
   index,
   handleToggle,
   allSequenceCards,
+  handleOnEdit,
 }) {
   return (
     <Card isActive={isActive}>
+      <EditButton onClick={() => handleOnEdit()} />
       <Header>
         <Description>{description}</Description>
         <ToggleContainer>
           {isActive ? (
-            <PauseButton onClick={() => handleToggle(index)} />
+            <PauseButton
+              data-cy="playPauseButton"
+              onClick={() => handleToggle(index)}
+            />
           ) : (
-            <PlayButton onClick={() => handleToggle(index)} />
+            <PlayButton
+              data-cy="playPauseButton"
+              onClick={() => handleToggle(index)}
+            />
           )}
         </ToggleContainer>
       </Header>
