@@ -17,7 +17,6 @@ SequenceInput.propTypes = {
   handleOnUpdateCard: PropTypes.func,
   onUpdateCancel: PropTypes.func,
   isEmpty: PropTypes.bool.isRequired,
-  isAlert: PropTypes.bool,
 }
 
 export default function SequenceInput({
@@ -26,7 +25,6 @@ export default function SequenceInput({
   handleOnUpdateCard,
   onUpdateCancel,
   isEmpty,
-  isAlert,
 }) {
   const tags = ['Tor', 'Rote Karte']
 
@@ -41,7 +39,7 @@ export default function SequenceInput({
 
   useEffect(() => {
     isEmpty && resetState()
-  }, [isEmpty, isAlert])
+  }, [isEmpty])
 
   useEffect(() => {
     setDescription(updateCard ? updateCard.description : '')

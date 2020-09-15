@@ -30,7 +30,6 @@ const ErrorWrapper = styled.div`
   position: absolute;
   right: 0;
   top: 0;
-  width: 100wh;
   z-index: 100;
 `
 

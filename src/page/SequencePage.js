@@ -75,7 +75,6 @@ export default function SequencePage() {
         handleOnUpdateCard={handleOnUpdateCard}
         onUpdateCancel={onUpdateCancel}
         isEmpty={isEmpty}
-        isAlert={isAlert}
       />
 
       <Footer>
