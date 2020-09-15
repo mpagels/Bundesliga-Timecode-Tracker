@@ -98,8 +98,8 @@ export default function SequenceCard({
 const Card = styled.section`
   border-radius: 10px;
   border: 1px solid grey;
-  margin: 15px 0;
-  padding: 0 10px;
+  margin: 15px 20px;
+  padding: 10px 10px;
   ${(props) => !props.isActive && 'background-color : #E7C5CA; color: grey;'}
 `
 

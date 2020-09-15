@@ -1,16 +1,43 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import SequenceCard from '../components/SequenceCard/SequenceCard'
 import SequenceInput from '../components/SequenceInput/SequenceInput'
 import { getTimecodeTotalLengthFromSequenceCards } from '../utils/Timecode'
+import {
+  loadFromLocalStorage,
+  saveToLocalStorage,
+  deleteFromLocalStorage,
+} from '../utils/localStorage'
+import { ReactComponent as DeleteButton } from '../assets/delete-data.svg'
+import ErrorModal from '../components/modals/ErrorModal/ErrorModal'
+import AlertModal from '../components/modals/AlertModal/AlertModal'
 
 export default function SequencePage() {
   const [sequenceCards, setSequenceCards] = useState([])
   const [updateCard, setUpdateCard] = useState()
   const [updateIndex, setUpdateIndex] = useState()
+  const [isError, setIsError] = useState()
+  const [isAlert, setIsAlert] = useState()
 
+  useEffect(() => {
+    const sequencesFromLocalStorage = loadFromLocalStorage('sequences')
+    sequencesFromLocalStorage && setSequenceCards(sequencesFromLocalStorage)
+  }, [])
+
+  document.body.style.overflowY = isError || isAlert ? 'hidden' : 'unset'
+
+  const isEmpty = sequenceCards.length === 0
   return (
     <>
+      {isAlert && (
+        <AlertModal
+          handleOnOk={handleAlertOk}
+          handleOnCancel={handleAlertCancel}
+        >
+          Sollen wirklich alle Daten gelöscht werden?
+        </AlertModal>
+      )}
+      {isError && <ErrorModal handleErrorOK={handleErrorOK} />}
       {sequenceCards.map(
         (
           {
@@ -47,46 +74,118 @@ export default function SequencePage() {
         updateCard={updateCard}
         handleOnUpdateCard={handleOnUpdateCard}
         onUpdateCancel={onUpdateCancel}
+        isEmpty={isEmpty}
       />
 
       <Footer>
-        {sequenceCards.length === 0
-          ? '00:00:00:00'
-          : getTimecodeTotalLengthFromSequenceCards(sequenceCards)}
+        <DeleteData>
+          {isEmpty ? (
+            <DeleteButton
+              data-cy="deleteStorageButton"
+              style={{ fill: 'rgba(0, 0, 0, 0.3)' }}
+            />
+          ) : (
+            <DeleteButton
+              data-cy="deleteStorageButton"
+              style={{ cursor: 'pointer' }}
+              onClick={() => setIsAlert(true)}
+            />
+          )}
+        </DeleteData>
+        <TimeCode>
+          {sequenceCards.length === 0
+            ? '00:00:00:00'
+            : getTimecodeTotalLengthFromSequenceCards(sequenceCards)}
+        </TimeCode>
+        <RightEmpty />
       </Footer>
     </>
   )
 
-  function onSave(sequence) {
-    setSequenceCards([...sequenceCards, sequence])
+  function onSave(sequenceCard) {
+    const sequencesFromLocalStorage = loadFromLocalStorage('sequences')
+
+    if (sequencesFromLocalStorage) {
+      saveToLocalStorage('sequences', [
+        ...sequencesFromLocalStorage,
+        sequenceCard,
+      ])
+      setSequenceCards([...sequencesFromLocalStorage, sequenceCard])
+    } else {
+      saveToLocalStorage('sequences', [sequenceCard])
+      setSequenceCards([sequenceCard])
+    }
   }
 
   function handleToggle(index) {
-    const sequence = sequenceCards[index]
-    sequence.isActive = !sequence.isActive
-    setSequenceCards([
-      ...sequenceCards.slice(0, index),
-      sequence,
-      ...sequenceCards.slice(index + 1),
-    ])
+    try {
+      const sequence = loadFromLocalStorage('sequences')[index]
+      sequence.isActive = !sequence.isActive
+      saveSequenceToLocalStorage(sequence, index)
+    } catch {
+      setIsError(true)
+    }
   }
 
   function handleOnEdit(index) {
-    setUpdateCard(sequenceCards[index])
-    setUpdateIndex(index)
+    const sequencesFromLocalStorage = loadFromLocalStorage('sequences')
+    try {
+      setUpdateCard(sequencesFromLocalStorage[index])
+      setUpdateIndex(index)
+    } catch {
+      setIsError(true)
+    }
   }
 
   function handleOnUpdateCard(updatedCard) {
-    setSequenceCards([
-      ...sequenceCards.slice(0, updateIndex),
-      updatedCard,
-      ...sequenceCards.slice(updateIndex + 1),
-    ])
+    saveSequenceToLocalStorage(updatedCard, updateIndex)
     setUpdateCard('')
+  }
+
+  function saveSequenceToLocalStorage(sequenceCard, index) {
+    const sequencesFromLocalStorage = loadFromLocalStorage('sequences')
+
+    if (sequencesFromLocalStorage) {
+      const SequenceCards = [
+        ...sequencesFromLocalStorage.slice(0, index),
+        sequenceCard,
+        ...sequencesFromLocalStorage.slice(index + 1),
+      ]
+      saveToLocalStorage('sequences', SequenceCards)
+      setSequenceCards(SequenceCards)
+    } else {
+      saveToLocalStorage('sequences', [sequenceCard])
+      setSequenceCards([sequenceCard])
+    }
   }
 
   function onUpdateCancel() {
     setUpdateCard('')
+  }
+
+  function handleErrorOK() {
+    setIsError(false)
+    setSequenceCards([])
+  }
+
+  function deleteSequencesFromStorage() {
+    deleteFromLocalStorage('sequences')
+    resetStates()
+  }
+
+  function resetStates() {
+    setSequenceCards([])
+    setUpdateIndex(null)
+    setUpdateCard('')
+  }
+
+  function handleAlertCancel() {
+    setIsAlert(false)
+  }
+
+  function handleAlertOk() {
+    deleteSequencesFromStorage()
+    setIsAlert(false)
   }
 }
 
@@ -105,4 +204,16 @@ const Footer = styled.footer`
   position: fixed;
   text-align: center;
   width: 100%;
+  -webkit-overflow-scrolling: touch;
+`
+
+const DeleteData = styled.div`
+  width: 25%;
+`
+const TimeCode = styled.div`
+  width: 50%;
+  text-align: center;
+`
+const RightEmpty = styled.div`
+  width: 25%;
 `

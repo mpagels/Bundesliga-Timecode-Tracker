@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components/macro'
 import Tag from '../Tag/Tag'
 import TimecodeInput from '../TimecodeTracker/TimecodeInput'
@@ -16,6 +16,7 @@ SequenceInput.propTypes = {
   updateCard: PropTypes.string,
   handleOnUpdateCard: PropTypes.func,
   onUpdateCancel: PropTypes.func,
+  isEmpty: PropTypes.bool.isRequired,
 }
 
 export default function SequenceInput({
@@ -23,6 +24,7 @@ export default function SequenceInput({
   updateCard = '',
   handleOnUpdateCard,
   onUpdateCancel,
+  isEmpty,
 }) {
   const tags = ['Tor', 'Rote Karte']
 
@@ -33,6 +35,15 @@ export default function SequenceInput({
   const [playerName, setPlayerName] = useState('')
   const [timeCodeLowerThirdIn, setTimeCodeLowerThirdIn] = useState('')
   const [timeCodeLowerThirdLength, setTimeCodeLowerThirdLength] = useState('')
+  const inputOnUpdate = useRef(null)
+
+  useEffect(() => {
+    isEmpty && resetState()
+  }, [isEmpty])
+
+  useEffect(() => {
+    updateCard && inputOnUpdate.current.focus()
+  }, [updateCard])
 
   useEffect(() => {
     setDescription(updateCard ? updateCard.description : '')
@@ -94,6 +105,7 @@ export default function SequenceInput({
           name="description"
           id="description"
           value={description}
+          ref={inputOnUpdate}
         />
         <ValidationError
           errorMessage="Szenenbeschreibung fehlt"
@@ -170,7 +182,11 @@ export default function SequenceInput({
           <Delete onClick={onCancelClick} type="reset">
             ABBRECHEN
           </Delete>
-          {updateCard ? <Save>AKTUALISIEREN</Save> : <Save>SPEICHERN</Save>}
+          {updateCard ? (
+            <Save save={true}>AKTUALISIEREN</Save>
+          ) : (
+            <Save>SPEICHERN</Save>
+          )}
         </Actions>
       </form>
     </Wrapper>
@@ -301,6 +317,7 @@ const Wrapper = styled.section`
   border-radius: 10px;
   margin-bottom: 80px;
   padding: 10px;
+  margin: 0 20px 80px;
   background-color: var(--background-grey);
   ${(props) => props.isEmpty && 'box-shadow: 0 0 3px 3px #cb6870;'}
 `
@@ -343,6 +360,7 @@ const Delete = styled(Button)`
 `
 const Save = styled(Button)`
   background-color: #96bd88;
+  font-size: ${(props) => props.save && '16px;'};
   &:focus {
     border: 2px solid green;
   }

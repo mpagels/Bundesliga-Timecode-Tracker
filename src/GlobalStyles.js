@@ -7,12 +7,15 @@ export default createGlobalStyle`
 }
 
 body {
-    margin: 0 20px;
+    
+    margin: 0;
     font-size: 112.5%;
 }
 
 :root {
     --background-grey: #e0e0e0;
     --tag-border-grey: #e3e3e3;
+    --button-confirm: #96bd88;
+    --button-cancel: #cb6870;
     }
 `
