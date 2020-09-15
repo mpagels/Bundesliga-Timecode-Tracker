@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDom from 'react-dom'
 import styled from 'styled-components/macro'
 import PropTypes from 'prop-types'
 
@@ -9,7 +10,7 @@ AlertModal.propTypes = {
 }
 
 function AlertModal({ children, handleOnOk, handleOnCancel }) {
-  return (
+  return ReactDom.createPortal(
     <ErrorWrapper>
       <ErrorModal>
         <ErrorMessage>ACHTUNG</ErrorMessage>
@@ -23,7 +24,8 @@ function AlertModal({ children, handleOnOk, handleOnCancel }) {
           </Action>
         </ActionWrapper>
       </ErrorModal>
-    </ErrorWrapper>
+    </ErrorWrapper>,
+    document.getElementById('portal')
   )
 }
 

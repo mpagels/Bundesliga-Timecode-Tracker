@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDom from 'react-dom'
 import styled from 'styled-components/macro'
 import PropTypes from 'prop-types'
 
@@ -7,7 +8,7 @@ ErrorModal.propTypes = {
 }
 
 function ErrorModal({ handleErrorOK }) {
-  return (
+  return ReactDom.createPortal(
     <ErrorWrapper>
       <Modal>
         <ErrorTitle>Ein Fehler ist beim Laden aufgetreten!</ErrorTitle>
@@ -16,7 +17,8 @@ function ErrorModal({ handleErrorOK }) {
         </InfoMessage>
         <Action onClick={handleErrorOK}>OK</Action>
       </Modal>
-    </ErrorWrapper>
+    </ErrorWrapper>,
+    document.getElementById('portal')
   )
 }
 
