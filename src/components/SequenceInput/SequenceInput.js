@@ -42,6 +42,10 @@ export default function SequenceInput({
   }, [isEmpty])
 
   useEffect(() => {
+    updateCard && inputOnUpdate.current.focus()
+  }, [updateCard])
+
+  useEffect(() => {
     setDescription(updateCard ? updateCard.description : '')
     setTimeCode(updateCard ? updateCard.timeCode : '')
     setPlayerName(updateCard.playerName ? updateCard.playerName : '')
@@ -57,8 +61,6 @@ export default function SequenceInput({
         : ''
     )
   }, [updateCard])
-
-  updateCard && inputOnUpdate.current.focus()
 
   const isEmptyScene = useIsEmptyScene(description, timeCode)
   const isEmptyEvent = useIsEmptyEvent(
