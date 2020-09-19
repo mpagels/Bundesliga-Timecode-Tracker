@@ -24,10 +24,11 @@ body {
 }
 
 :root {
-    --background-grey: #e0e0e0;
+    --background-grey: #FAFAFA;
     --tag-border-grey: #e3e3e3;
-    --button-confirm: #96bd88;
+    --button-confirm: #00DC8C;
     --button-cancel: #cb6870;
+    --button-delete: #C83232;
     --font-blue: #0032C8;
     --gradient-blue-top: #001496:
     --gradient-blue-bottom: #0032C8:

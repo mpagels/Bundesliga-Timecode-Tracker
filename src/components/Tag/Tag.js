@@ -21,16 +21,17 @@ export default Tag
 
 const Button = styled.button`
   all: unset;
+  font-family: 'BaiJamjuree';
+  font-size: 1em;
   background-color: transparent;
-  border-radius: 10px;
-  border: 2px solid #cdcdcd;
-  color: #a7a7a7;
+  border: 2px solid var(--font-blue);
+  border-radius: 20px;
+  color: var(--font-blue);
   cursor: pointer;
-  font-size: 18px;
   margin: 0 5px;
   padding: 5px 20px;
+  width: 100%;
   text-align: center;
   ${({ isActive }) =>
-    isActive &&
-    'background-color: #538EFB; border: 2px solid #538EFB; color: white'}
+    isActive && 'background-color: var(--font-blue); color: white'}
 `

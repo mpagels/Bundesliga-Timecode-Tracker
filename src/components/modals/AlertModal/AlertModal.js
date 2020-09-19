@@ -13,14 +13,13 @@ function AlertModal({ children, handleOnOk, handleOnCancel }) {
   return ReactDom.createPortal(
     <ErrorWrapper>
       <ErrorModal>
-        <ErrorMessage>ACHTUNG</ErrorMessage>
         <InfoMessage>{children}</InfoMessage>
         <ActionWrapper>
           <Action type="cancel" color="" onClick={handleOnCancel}>
-            NEIN
+            ABBRECHEN
           </Action>
           <Action type="confirm" onClick={handleOnOk}>
-            JA
+            JA, ALLES LÖSCHEN
           </Action>
         </ActionWrapper>
       </ErrorModal>
@@ -32,7 +31,7 @@ function AlertModal({ children, handleOnOk, handleOnCancel }) {
 export default AlertModal
 
 const ErrorWrapper = styled.div`
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: white;
   bottom: 0;
   height: auto;
   left: 0;
@@ -41,25 +40,16 @@ const ErrorWrapper = styled.div`
   position: fixed;
   right: 0;
   top: 0;
-  width: 100%;
   z-index: 100;
 `
 
 const ErrorModal = styled.section`
-  background-color: #f3f3f3;
-  border-radius: 10px;
-  border: 1px solid #ccc;
   display: flex;
   flex-direction: column;
-  height: 18em;
   justify-content: space-between;
-  left: 50%;
-  margin-left: -10em;
-  margin-top: -9em;
   padding: 0;
   position: fixed;
-  top: 50%;
-  width: 20em;
+  align-items: center;
 `
 
 const ErrorMessage = styled.h2`
@@ -70,30 +60,29 @@ const ErrorMessage = styled.h2`
 `
 
 const InfoMessage = styled.p`
-  font-size: 18px;
+  font-family: 'BaiJamjuree';
+  font-size: 2.5em;
+  color: var(--button-cancel);
   padding: 0 10px;
   text-align: center;
 `
 const ActionWrapper = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  width: 70%;
 `
 const Action = styled.button`
   all: unset;
-  background-color: ${(props) =>
-    props.type === 'confirm'
-      ? 'var(--button-confirm)'
-      : 'var(--button-cancel)'};
-  border-radius: 10px;
-  border: 2px solid transparent;
-  box-shadow: 0 4px 8px -2px black;
-  color: white;
+  font-family: 'BaiJamjuree';
+  font-size: 1em;
+  border-radius: 50px;
+  border: ${(props) =>
+    props.type === 'cancel' ? 'none' : '4px solid var(--button-cancel)'};
+  color: ${(props) =>
+    props.type === 'cancel' ? 'none' : 'var(--button-cancel)'};
   cursor: pointer;
   display: flex;
-  font-weight: 800;
   justify-content: center;
-  margin: 10px;
-  padding: 10px;
-  position: relative;
-  width: 100%;
+  margin: 30px;
+  padding: 20px;
 `

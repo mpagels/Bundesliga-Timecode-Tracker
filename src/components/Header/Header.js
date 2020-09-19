@@ -27,14 +27,16 @@ export default function Header({
             </Circle>
           ) : (
             <>
-              <Circle>
-                <Settings />
-              </Circle>
-              <AddPlus>
-                <Link to="/create">
+              <Link to="/settings">
+                <Circle>
+                  <Settings />
+                </Circle>
+              </Link>
+              <Link to="/create">
+                <AddPlus>
                   <Plus />
-                </Link>
-              </AddPlus>
+                </AddPlus>
+              </Link>
             </>
           )}
         </ActionWrapper>
@@ -52,9 +54,11 @@ export default function Header({
 
 const Wrapper = styled.div`
   position: fixed;
+  background-color: white;
   top: 0%;
   width: 100%;
   left: 0%;
+  z-index: 50;
   height: ${({ type }) => (type === 'small' ? '80px;' : '160px')};
   ${({ type }) => type === 'small' && 'display: flex; align-items: center;'}
 

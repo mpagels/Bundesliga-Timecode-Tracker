@@ -10,6 +10,7 @@ import useIsEmptyEvent from './hooks/useIsEmptyEvent'
 import useHasZeros from './hooks/useHasZeros'
 import useCheckLowerThirds from './hooks/useCheckLowerThirds'
 import ValidationError from './ValidationError'
+import { useHistory } from 'react-router-dom'
 
 SequenceInput.propTypes = {
   onSaveClick: PropTypes.func.isRequired,
@@ -27,6 +28,7 @@ export default function SequenceInput({
   isEmpty,
 }) {
   const tags = ['Tor', 'Rote Karte']
+  const history = useHistory()
 
   const [activeTagIndex, setActiveTagIndex] = useState(null)
   const [description, setDescription] = useState('')
@@ -43,6 +45,9 @@ export default function SequenceInput({
 
   useEffect(() => {
     updateCard && inputOnUpdate.current.focus()
+    return () => {
+      onUpdateCancel()
+    }
   }, [updateCard])
 
   useEffect(() => {
@@ -88,9 +93,7 @@ export default function SequenceInput({
   const isCorrectTimeCode = timeCode.length % 2 === 0
 
   return (
-    <Wrapper
-      isEmpty={isDirty && (isEmptyScene || (isEmptyEvent && activeTagIndex))}
-    >
+    <Wrapper>
       <form onSubmit={handleSubmit}>
         <StyledLabel htmlFor="description">
           {updateCard ? 'Szene bearbeiten' : 'Neue Szene hinzufügen'}
@@ -101,7 +104,7 @@ export default function SequenceInput({
               description.length === 1) &&
             handleDescriptionChange(event)
           }
-          placeholder="Lewandowski köpft auf Tor..."
+          placeholder="Szenenbeschreibung..."
           name="description"
           id="description"
           value={description}
@@ -112,7 +115,7 @@ export default function SequenceInput({
           hasError={validateDescription()}
         />
         <TimecodeInput
-          title="Szenenlänge"
+          title="SZENENLÄNGE"
           onBackSpace={preventCursorJumpToEnd}
           inputValue={formatter(timeCode)}
           onChange={(event) => handleTimeCodeChange(event, setTimeCode)}
@@ -134,7 +137,7 @@ export default function SequenceInput({
         </TagContainer>
         {activeTagIndex === null || (
           <>
-            <StyledLabel htmlFor="playerName">Spielername:</StyledLabel>
+            <StyledLabel htmlFor="playerName">SPIELERNAME</StyledLabel>
             <NameInput
               type="text"
               id="playerName"
@@ -150,7 +153,7 @@ export default function SequenceInput({
               <TimecodeInput
                 style={{ margin: '10px 0' }}
                 onBackSpace={preventCursorJumpToEnd}
-                title="Bauchbinde IN (relativ zur Szene)"
+                title="BAUCHBINDE IN (relativ zur Szene)"
                 inputValue={formatter(timeCodeLowerThirdIn)}
                 onChange={(event) =>
                   handleTimeCodeChange(event, setTimeCodeLowerThirdIn)
@@ -164,7 +167,7 @@ export default function SequenceInput({
                 style={{ margin: '10px 0' }}
                 disabled={disabled}
                 onBackSpace={preventCursorJumpToEnd}
-                title="Bauchbinde Länge"
+                title="BAUCHBINDE LÄNGE"
                 placeholder="SS:FF"
                 inputValue={formatter(timeCodeLowerThirdLength)}
                 onChange={(event) =>
@@ -179,14 +182,14 @@ export default function SequenceInput({
           </>
         )}
         <Actions>
-          <Delete onClick={onCancelClick} type="reset">
-            ABBRECHEN
-          </Delete>
           {updateCard ? (
             <Save save={true}>AKTUALISIEREN</Save>
           ) : (
             <Save>SPEICHERN</Save>
           )}
+          <Delete onClick={onCancelClick} type="reset">
+            LÖSCHEN
+          </Delete>
         </Actions>
       </form>
     </Wrapper>
@@ -216,6 +219,7 @@ export default function SequenceInput({
         isActive: true,
       })
       resetState()
+      history.goBack()
     } else if (validationPassedWithEvent()) {
       doSubmitAction({
         description,
@@ -227,6 +231,7 @@ export default function SequenceInput({
         isActive: true,
       })
       resetState()
+      history.goBack()
     }
   }
 
@@ -314,82 +319,84 @@ export default function SequenceInput({
 }
 
 const Wrapper = styled.section`
-  border-radius: 10px;
   margin-bottom: 80px;
   padding: 10px;
   margin: 0 20px 80px;
-  background-color: var(--background-grey);
   ${(props) => props.isEmpty && 'box-shadow: 0 0 3px 3px #cb6870;'}
 `
 const SceneDescription = styled.textarea`
+  font-family: 'BaiJamjuree';
+  font-size: 1em;
   width: 100%;
   height: 100px;
-  padding: 10px;
-  font-size: 130%;
-  background-color: var(----background-grey);
+  padding: 20px;
+  color: #c8c8c8;
+  border-radius: 30px;
+  background-color: var(--background-grey);
   border: none;
-  box-shadow: inset 0 0 3px 1px #b8b8b8;
   &:focus {
-    box-shadow: inset 0 0 3px 1px black;
+    box-shadow: inset 0 0 3px 1px #e3e3e3;
     outline: black;
+    color: #737373;
   }
 `
 const Actions = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
 `
 const Button = styled.button`
   all: unset;
   border-radius: 10px;
   border: 2px solid transparent;
-  box-shadow: 0 4px 8px -2px black;
   color: white;
   cursor: pointer;
   display: flex;
-  font-weight: 800;
   justify-content: center;
   margin: 10px;
   padding: 10px;
-  width: 100%;
 `
 const Delete = styled(Button)`
-  background-color: #cb6870;
-
-  &:focus {
-    border: 2px solid red;
-  }
+  font-family: 'BaiJamjuree';
+  font-size: 1em;
+  background-color: none;
+  color: var(--button-delete);
 `
 const Save = styled(Button)`
-  background-color: #96bd88;
-  font-size: ${(props) => props.save && '16px;'};
-  &:focus {
-    border: 2px solid green;
-  }
+  font-family: 'BaiJamjuree';
+  font-size: 1.3em;
+  width: 175px;
+  border-radius: 30px;
+  background-color: var(--button-confirm);
 `
 const TagContainer = styled.div`
   display: flex;
   margin: 10px 10px 30px 0;
 `
 const StyledLabel = styled.label`
+  font-family: 'BaiJamjuree';
+  font-size: 0.8em;
+  color: var(--font-blue);
   display: inline-block;
-  margin-bottom: 2px;
-  color: #737373;
-  font-size: 18px;
+  margin-bottom: 5px;
 `
 const NameInput = styled.input`
-  padding: 20px;
-  border: 0;
+  background-color: var(--background-grey);
+  border-radius: 40px;
+  border: none;
+  color: #c8c8c8;
+  padding: 10px 20px;
+  font-family: 'BaiJamjuree';
+  font-size: 1em;
   width: 100%;
-  font-size: 18px;
-  box-shadow: inset 0 0 3px 1px #b8b8b8;
-  background-color: var(----background-grey);
   &:focus {
-    box-shadow: inset 0 0 3px 1px black;
+    box-shadow: inset 0 0 3px 1px #e3e3e3;
     outline: black;
+    color: #737373;
   }
-  font-size: 150%;
-  padding: 15px;
 `
 const LowerThirdContainer = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
 `
