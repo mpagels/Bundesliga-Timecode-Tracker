@@ -60,7 +60,6 @@ const ErrorMessage = styled.h2`
 `
 
 const InfoMessage = styled.p`
-  font-family: 'BaiJamjuree';
   font-size: 2.5em;
   color: var(--button-cancel);
   padding: 0 10px;
@@ -69,11 +68,10 @@ const InfoMessage = styled.p`
 const ActionWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 70%;
+  width: 75%;
 `
 const Action = styled.button`
   all: unset;
-  font-family: 'BaiJamjuree';
   font-size: 1em;
   border-radius: 50px;
   border: ${(props) =>

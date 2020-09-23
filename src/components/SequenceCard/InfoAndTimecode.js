@@ -15,14 +15,13 @@ const Wrapper = styled.div`
   flex-direction: column;
 `
 const Text = styled.h3`
-  font-family: 'BaiJamjuree';
   margin: 0;
   padding: 0;
   color: white;
   font-size: 0.6em;
+  font-weight: 700;
 `
 const TimeCode = styled.p`
-  font-family: 'BaiJamjuree';
   margin: 0;
   padding: 0;
   color: white;

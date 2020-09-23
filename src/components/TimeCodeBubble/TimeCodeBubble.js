@@ -20,22 +20,21 @@ const BubbleWrapper = styled.div`
   border-radius: 50px;
   background: linear-gradient(
     180deg,
-    rgba(240, 240, 240, 1) 0%,
-    rgba(250, 250, 250, 1) 100%
+    rgba(var(--white-grey)) 0%,
+    rgba(var(--white)) 100%
   );
 `
 
 const ForWhat = styled.p`
   margin: 0;
-  font-family: 'BaiJamjuree';
   color: var(--font-blue);
   font-size: 0.6em;
+  font-weight: 700;
 `
 
 const TimeCode = styled.p`
   margin: 0;
-  padding: 0px;
+  padding: 0;
   font-size: 1em;
-  font-family: 'BaiJamjuree';
   color: var(--font-blue);
 `

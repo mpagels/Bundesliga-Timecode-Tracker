@@ -73,8 +73,8 @@ const NavWrapper = styled.nav`
   left: 0;
   background: linear-gradient(
     180deg,
-    rgba(240, 240, 240, 1) 0%,
-    rgba(250, 250, 250, 1) 100%
+    rgba(var(--white-grey)) 0%,
+    rgba(var(--white)) 100%
   );
 
   & ul {
@@ -85,7 +85,6 @@ const NavWrapper = styled.nav`
     justify-content: space-evenly;
   }
   & li {
-    font-family: 'BaiJamjuree';
     font-size: 0.6em;
     display: flex;
     flex-direction: column;
@@ -102,14 +101,12 @@ const NavWrapper = styled.nav`
     }
 
     & p {
-      font-family: 'BaiJamjuree';
       color: var(--font-blue);
       margin: 0;
       padding: 3px;
     }
 
     & span {
-      font-family: 'BaiJamjuree';
       color: var(--font-blue);
     }
   }

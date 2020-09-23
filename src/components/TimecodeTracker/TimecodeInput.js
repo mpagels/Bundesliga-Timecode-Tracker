@@ -48,8 +48,8 @@ const InputContainer = styled.div`
 `
 
 const Label = styled.label`
-  font-family: 'BaiJamjuree';
   font-size: 0.8em;
+  font-weight: 700;
   color: var(--font-blue);
   display: inline-block;
   margin-bottom: 5px;
@@ -65,14 +65,14 @@ const Input = styled.input`
   background-color: var(--background-grey);
   border-radius: 40px;
   border: none;
-  color: #c8c8c8;
-  font-family: 'BaiJamjuree';
+  color: var(--solid-grey);
+
   font-size: 1em;
   padding: 10px 20px;
   text-align: right;
   &:focus {
     box-shadow: inset 0 0 3px 1px #e3e3e3;
     outline: black;
-    color: #737373;
+    color: var(--dark-grey);
   }
 `

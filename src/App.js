@@ -63,6 +63,52 @@ export default function App() {
   return (
     <>
       <Switch>
+        <Route exact path="/">
+          {isError && <ErrorModal handleErrorOK={handleErrorOK} />}
+          <Header
+            title="TIMECODE TRACKER"
+            type="big"
+            totalLength={getTimecodeTotalLengthFromSequenceCards(allCards)}
+          />
+          <Main marginTop={160}>
+            {sequenceCards['1st']?.length === 0 || !sequenceCards['1st'] ? (
+              <Hint>FÜGE EINE SZENE HINZU</Hint>
+            ) : (
+              sequenceCards[
+                '1st'
+              ].map(
+                (
+                  {
+                    description,
+                    timeCode,
+                    tag,
+                    timeCodeLowerThirdIn,
+                    timeCodeLowerThirdLength,
+                    playerName,
+                    isActive,
+                  },
+                  index,
+                  arrayOfAllCards
+                ) => (
+                  <SequenceCard
+                    description={description}
+                    key={index}
+                    index={index}
+                    allSequenceCards={arrayOfAllCards}
+                    lengthTimeCode={timeCode}
+                    tag={tag}
+                    timeCodeLowerThirdIn={timeCodeLowerThirdIn}
+                    timeCodeLowerThirdLength={timeCodeLowerThirdLength}
+                    playerName={playerName}
+                    isActive={isActive}
+                    handleToggle={handleToggle}
+                    handleOnEdit={() => handleOnEdit(index)}
+                  />
+                )
+              )
+            )}
+          </Main>
+        </Route>
         <Route path="/create">
           <Header
             title="NEUE SZENE HINZUFÜGEN"
@@ -238,50 +284,36 @@ export default function App() {
             )}
           </Main>
         </Route>
-        <Route path="/">
-          {isError && <ErrorModal handleErrorOK={handleErrorOK} />}
+
+        <Route path="/create">
           <Header
-            title="TIMECODE TRACKER"
-            type="big"
-            totalLength={getTimecodeTotalLengthFromSequenceCards(allCards)}
+            title="NEUE SZENE HINZUFÜGEN"
+            type="small"
+            isCloseButton={true}
           />
-          <Main marginTop={160}>
-            {sequenceCards['1st']?.length === 0 || !sequenceCards['1st'] ? (
-              <Hint>FÜGE EINE SZENE HINZU</Hint>
-            ) : (
-              sequenceCards[
-                '1st'
-              ].map(
-                (
-                  {
-                    description,
-                    timeCode,
-                    tag,
-                    timeCodeLowerThirdIn,
-                    timeCodeLowerThirdLength,
-                    playerName,
-                    isActive,
-                  },
-                  index,
-                  arrayOfAllCards
-                ) => (
-                  <SequenceCard
-                    description={description}
-                    key={index}
-                    index={index}
-                    allSequenceCards={arrayOfAllCards}
-                    lengthTimeCode={timeCode}
-                    tag={tag}
-                    timeCodeLowerThirdIn={timeCodeLowerThirdIn}
-                    timeCodeLowerThirdLength={timeCodeLowerThirdLength}
-                    playerName={playerName}
-                    isActive={isActive}
-                    handleToggle={handleToggle}
-                    handleOnEdit={() => handleOnEdit(index)}
-                  />
-                )
-              )
-            )}
+          <Main marginTop={100}>
+            <SequenceInput
+              onSaveClick={onSave}
+              updateCard={updateCard}
+              handleOnUpdateCard={handleOnUpdateCard}
+              onUpdateCancel={onUpdateCancel}
+              isEmpty={isEmpty}
+            />
+          </Main>
+        </Route>
+
+        <Route path="/settings">
+          {isAlert && (
+            <AlertModal
+              handleOnOk={handleAlertOk}
+              handleOnCancel={handleAlertCancel}
+            >
+              ACHTUNG, WIRKLICH ALLE DATEN DES LETZTEN SPIELTAGES LÖSCHEN?
+            </AlertModal>
+          )}
+          <Header title="EINSTELLUNGEN" type="small" isCloseButton={true} />
+          <Main marginTop={100}>
+            <Settings onClick={() => setIsAlert(true)} />
           </Main>
         </Route>
       </Switch>
@@ -408,7 +440,6 @@ const Main = styled.main`
 `
 
 const Hint = styled.div`
-  font-family: 'BaiJamjuree';
   font-size: 0.9em;
   color: var(--font-blue);
   position: fixed;

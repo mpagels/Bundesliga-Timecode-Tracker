@@ -60,15 +60,15 @@ export default function SequenceCard({
           )}
         </ToggleContainer>
       </Header>
-      <MainContent>
+      <CardContent>
         <InfoAndTimecode
           info={isSpecial ? 'timecode' : 'dauer'}
           timecode={getFormatedTimecode(lengthTimeCode)}
         />
         <Description>{description}</Description>
-      </MainContent>
+      </CardContent>
       {tag && (
-        <AdditionalContent>
+        <AdditionalCardContent>
           <TagAndPlayer>
             <Tag>{tag}</Tag>
             <Player>{playerName}</Player>
@@ -98,7 +98,7 @@ export default function SequenceCard({
               )}
             />
           </LowerThirds>
-        </AdditionalContent>
+        </AdditionalCardContent>
       )}
 
       <CardFooter>
@@ -120,17 +120,21 @@ const Card = styled.section`
   ${(props) => !props.isActive && 'opacity: 0.3;'}
   margin: 15px 20px;
   padding: 20px 30px;
-  background: transparent linear-gradient(180deg, #001496 0%, #0032c8 100%) 0%
-    0% no-repeat padding-box;
+  background: transparent
+    linear-gradient(
+      180deg,
+      var(--gradient-blue-top) 0%,
+      var(--gradient-blue-bottom) 100%
+    )
+    0% 0% no-repeat padding-box;
 `
 
-const MainContent = styled.section`
+const CardContent = styled.section`
   display: flex;
   flex-direction: column;
   padding: 0;
 `
 const Description = styled.p`
-  font-family: 'BaiJamjuree';
   font-size: 1em;
   word-break: break-word;
   color: white;
@@ -142,12 +146,11 @@ const Header = styled.header`
 `
 
 const Minute = styled.h2`
-  font-family: 'BaiJamjuree';
   font-size: 2em;
   margin: 0;
 `
 
-const AdditionalContent = styled.section`
+const AdditionalCardContent = styled.section`
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -159,11 +162,10 @@ const TagAndPlayer = styled.div`
 `
 
 const Player = styled.p`
-  font-family: 'BaiJamjuree';
   font-size: 0.8em;
   margin: 0;
   padding: 0;
-  color: #00dc8c;
+  color: var(--font-greenish);
 `
 const Line = styled.hr`
   width: 100%;
@@ -185,11 +187,11 @@ const Tag = styled.div`
   display: flex;
   align-items: center;
   border-radius: 50px;
-  border: 3px solid #ff7f00;
-  color: #ff7f00;
+  border: 3px solid var(--orange-border);
+  color: var(--orange-border);
   padding: 5px 15px;
   margin-right: 20px;
-  font-family: 'BaiJamjuree';
+
   font-size: 0.8em;
 `
 const ToggleContainer = styled.div`

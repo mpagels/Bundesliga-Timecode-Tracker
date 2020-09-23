@@ -24,7 +24,7 @@ const DeleteAction = styled.button`
   border: 3px solid var(--button-delete);
   border-radius: 50px;
   & span {
-    font-family: 'BaiJamjuree';
+    font-weight: 700;
     font-size: 1.4em;
   }
 `

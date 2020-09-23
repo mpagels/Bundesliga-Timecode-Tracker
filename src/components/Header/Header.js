@@ -14,7 +14,7 @@ export default function Header({
   duration,
   onCircleClick,
 }) {
-  let history = useHistory()
+  const history = useHistory()
 
   return (
     <Wrapper type={type}>
@@ -63,7 +63,6 @@ const Wrapper = styled.div`
   ${({ type }) => type === 'small' && 'display: flex; align-items: center;'}
 
   & h1 {
-    font-family: 'BaiJamjuree';
     margin-left: 20px;
     color: var(--font-blue);
   }
@@ -99,7 +98,11 @@ const Circle = styled.button`
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background: linear-gradient(180deg, #001496 0%, #0032c8 100%);
+  background: linear-gradient(
+    180deg,
+    var(--gradient-blue-top) 0%,
+    var(--gradient-blue-bottom) 100%
+  );
 `
 
 const AddPlus = styled.button`
@@ -111,5 +114,9 @@ const AddPlus = styled.button`
   border-radius: 50% 0 0 50%;
   height: 60px;
   width: 65px;
-  background: linear-gradient(180deg, #001496 0%, #0032c8 100%);
+  background: linear-gradient(
+    180deg,
+    var(--gradient-blue-top) 0%,
+    var(--gradient-blue-bottom) 100%
+  );
 `

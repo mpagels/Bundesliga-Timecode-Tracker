@@ -21,7 +21,6 @@ export default Tag
 
 const Button = styled.button`
   all: unset;
-  font-family: 'BaiJamjuree';
   font-size: 1em;
   background-color: transparent;
   border: 2px solid var(--font-blue);
