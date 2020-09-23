@@ -104,6 +104,7 @@ const NavWrapper = styled.nav`
       color: var(--font-blue);
       margin: 0;
       padding: 3px;
+      font-weight: 700;
     }
 
     & span {

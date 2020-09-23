@@ -77,6 +77,7 @@ const Top = styled.div`
 const StyledHeader = styled.h1`
   font-size: 1.2em;
   margin: 0;
+  font-weight: 400;
 `
 
 const ActionWrapper = styled.div`
