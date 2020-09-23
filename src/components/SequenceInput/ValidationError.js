@@ -15,6 +15,6 @@ const Alert = styled.span`
   margin: 0;
   font-size: 0.6em;
   color: ${(props) =>
-    props.hasError ? 'var(--error-redish' : 'var(--background-grey)'};
+    props.hasError ? 'var(--error-redish)' : 'var(--background-grey)'};
 `
 export default ValidationError
