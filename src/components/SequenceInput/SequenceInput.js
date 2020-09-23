@@ -322,22 +322,21 @@ const Wrapper = styled.section`
   margin-bottom: 80px;
   padding: 10px;
   margin: 0 20px 80px;
-  ${(props) => props.isEmpty && 'box-shadow: 0 0 3px 3px #cb6870;'}
+  ${(props) => props.isEmpty && 'box-shadow: 0 0 3px 3px var(--error-redish);'}
 `
 const SceneDescription = styled.textarea`
-  font-family: 'BaiJamjuree';
   font-size: 1em;
   width: 100%;
   height: 100px;
   padding: 20px;
-  color: #c8c8c8;
+  color: var(--solid-grey);
   border-radius: 30px;
   background-color: var(--background-grey);
   border: none;
   &:focus {
-    box-shadow: inset 0 0 3px 1px #e3e3e3;
+    box-shadow: inset 0 0 3px 1px var(--tag-border-grey);
     outline: black;
-    color: #737373;
+    color: var(--dark-grey);
   }
 `
 const Actions = styled.div`
@@ -357,13 +356,11 @@ const Button = styled.button`
   padding: 10px;
 `
 const Delete = styled(Button)`
-  font-family: 'BaiJamjuree';
-  font-size: 1em;
+  font-size: 0.7em;
   background-color: none;
   color: var(--button-delete);
 `
 const Save = styled(Button)`
-  font-family: 'BaiJamjuree';
   font-size: 1.3em;
   width: 175px;
   border-radius: 30px;
@@ -374,25 +371,25 @@ const TagContainer = styled.div`
   margin: 10px 10px 30px 0;
 `
 const StyledLabel = styled.label`
-  font-family: 'BaiJamjuree';
   font-size: 0.8em;
   color: var(--font-blue);
   display: inline-block;
   margin-bottom: 5px;
+  font-weight: 700;
 `
 const NameInput = styled.input`
   background-color: var(--background-grey);
   border-radius: 40px;
   border: none;
-  color: #c8c8c8;
+  color: var(--solid-grey);
   padding: 10px 20px;
-  font-family: 'BaiJamjuree';
+
   font-size: 1em;
   width: 100%;
   &:focus {
-    box-shadow: inset 0 0 3px 1px #e3e3e3;
+    box-shadow: inset 0 0 3px 1px var(--tag-border-grey);
     outline: black;
-    color: #737373;
+    color: var(--dark-grey);
   }
 `
 const LowerThirdContainer = styled.div`

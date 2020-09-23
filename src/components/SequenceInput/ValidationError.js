@@ -13,9 +13,8 @@ function ValidationError({ errorMessage, hasError }) {
 
 const Alert = styled.span`
   margin: 0;
-  font-family: 'BaiJamjuree';
   font-size: 0.6em;
   color: ${(props) =>
-    props.hasError ? '#cb6870' : 'var(----background-grey)'};
+    props.hasError ? 'var(--error-redish' : 'var(--background-grey)'};
 `
 export default ValidationError

@@ -33,39 +33,7 @@ export default function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/create">
-          <Header
-            title="NEUE SZENE HINZUFÜGEN"
-            type="small"
-            isCloseButton={true}
-          />
-          <Main marginTop={100}>
-            <SequenceInput
-              onSaveClick={onSave}
-              updateCard={updateCard}
-              handleOnUpdateCard={handleOnUpdateCard}
-              onUpdateCancel={onUpdateCancel}
-              isEmpty={isEmpty}
-            />
-          </Main>
-        </Route>
-
-        <Route path="/settings">
-          {isAlert && (
-            <AlertModal
-              handleOnOk={handleAlertOk}
-              handleOnCancel={handleAlertCancel}
-            >
-              ACHTUNG, WIRKLICH ALLE DATEN DES LETZTEN SPIELTAGES LÖSCHEN?
-            </AlertModal>
-          )}
-          <Header title="EINSTELLUNGEN" type="small" isCloseButton={true} />
-          <Main marginTop={100}>
-            <Settings onClick={() => setIsAlert(true)} />
-          </Main>
-        </Route>
-
-        <Route path="/">
+        <Route exact path="/">
           {isError && <ErrorModal handleErrorOK={handleErrorOK} />}
           <Header
             title="TIMECODE TRACKER"
@@ -107,6 +75,37 @@ export default function App() {
                 )
               )
             )}
+          </Main>
+        </Route>
+        <Route path="/create">
+          <Header
+            title="NEUE SZENE HINZUFÜGEN"
+            type="small"
+            isCloseButton={true}
+          />
+          <Main marginTop={100}>
+            <SequenceInput
+              onSaveClick={onSave}
+              updateCard={updateCard}
+              handleOnUpdateCard={handleOnUpdateCard}
+              onUpdateCancel={onUpdateCancel}
+              isEmpty={isEmpty}
+            />
+          </Main>
+        </Route>
+
+        <Route path="/settings">
+          {isAlert && (
+            <AlertModal
+              handleOnOk={handleAlertOk}
+              handleOnCancel={handleAlertCancel}
+            >
+              ACHTUNG, WIRKLICH ALLE DATEN DES LETZTEN SPIELTAGES LÖSCHEN?
+            </AlertModal>
+          )}
+          <Header title="EINSTELLUNGEN" type="small" isCloseButton={true} />
+          <Main marginTop={100}>
+            <Settings onClick={() => setIsAlert(true)} />
           </Main>
         </Route>
       </Switch>
@@ -207,7 +206,6 @@ const Main = styled.main`
 `
 
 const Hint = styled.div`
-  font-family: 'BaiJamjuree';
   font-size: 0.9em;
   color: var(--font-blue);
   position: fixed;
