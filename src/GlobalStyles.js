@@ -30,8 +30,9 @@ body {
     --button-cancel: #cb6870;
     --button-delete: #C83232;
     --font-blue: #0032C8;
-    --gradient-blue-top: #001496:
-    --gradient-blue-bottom: #0032C8:
+    --gradient-blue-top: #001496;
+    --gradient-blue-bottom: #0032C8;
+    --special-orange: #FF7D00;
     
     }
 `

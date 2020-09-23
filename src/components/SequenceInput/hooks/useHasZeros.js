@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react'
 export default function useHasZeros(
   timeCode,
   timeCodeLowerThirdIn,
-  timeCodeLowerThirdLength
+  timeCodeLowerThirdLength,
+  realTimeCode
 ) {
   const [hasOnlyZeros, setHasOnlyZeros] = useState()
   const [lowerThirdInHasOnlyZeros, setLowerThirdInHasOnlyZeros] = useState()
   const [lowerThirdOutHasOnlyZeros, setLowerThirdOutHasOnlyZeros] = useState()
+  const [realTimeHasOnlyZeros, setRealTimeHasOnlyZeros] = useState()
 
   useEffect(() => {
     setHasOnlyZeros(new RegExp('^[0]+$').test(timeCode))
@@ -15,7 +17,13 @@ export default function useHasZeros(
     setLowerThirdOutHasOnlyZeros(
       new RegExp('^[0]+$').test(timeCodeLowerThirdLength)
     )
-  }, [timeCode, timeCodeLowerThirdIn, timeCodeLowerThirdLength])
+    setRealTimeHasOnlyZeros(new RegExp('^[0]+$').test(realTimeCode))
+  }, [timeCode, timeCodeLowerThirdIn, timeCodeLowerThirdLength, realTimeCode])
 
-  return [hasOnlyZeros, lowerThirdInHasOnlyZeros, lowerThirdOutHasOnlyZeros]
+  return [
+    hasOnlyZeros,
+    lowerThirdInHasOnlyZeros,
+    lowerThirdOutHasOnlyZeros,
+    realTimeHasOnlyZeros,
+  ]
 }
