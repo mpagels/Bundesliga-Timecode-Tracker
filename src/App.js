@@ -110,7 +110,7 @@ export default function App() {
         </Route>
       </Switch>
 
-      <NavBar />
+      {/* <NavBar /> */}
     </Router>
   )
   function onSave(sequenceCard) {
