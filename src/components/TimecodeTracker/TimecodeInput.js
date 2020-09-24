@@ -42,17 +42,17 @@ export default function TimecodeInput({
 const InputContainer = styled.div`
   align-items: start;
   border-radius: 5px;
-  border: 1px solid #ddd;
   display: flex;
   flex-direction: column;
-  margin: 10px 0;
+  margin: 10px 0 0;
 `
 
 const Label = styled.label`
-  color: #737373;
+  font-size: 0.8em;
+  font-weight: 700;
+  color: var(--font-blue);
   display: inline-block;
-  font-size: 18px;
-  margin-bottom: 2px;
+  margin-bottom: 5px;
 `
 
 const InputWrapper = styled.div`
@@ -62,15 +62,17 @@ const InputWrapper = styled.div`
 `
 
 const Input = styled.input`
-  background-color: var(----background-grey);
-  border: 0;
-  box-shadow: inset 0 0 3px 1px #b8b8b8;
-  font-size: 150%;
-  padding: 15px;
-  padding: 20px;
+  background-color: var(--background-grey);
+  border-radius: 40px;
+  border: none;
+  color: var(--solid-grey);
+
+  font-size: 1em;
+  padding: 10px 20px;
   text-align: right;
   &:focus {
-    box-shadow: inset 0 0 3px 1px black;
+    box-shadow: inset 0 0 3px 1px #e3e3e3;
     outline: black;
+    color: var(--dark-grey);
   }
 `

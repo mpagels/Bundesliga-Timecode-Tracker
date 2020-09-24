@@ -9,6 +9,8 @@ import {
   getLowerThirdTimeCodeIn,
   getLowerThirdTimeCodeOut,
 } from '../../utils/Timecode'
+import { useHistory } from 'react-router-dom'
+import InfoAndTimecode from './InfoAndTimecode'
 
 SequenceCard.propTypes = {
   description: PropTypes.string.isRequired,
@@ -36,11 +38,11 @@ export default function SequenceCard({
   allSequenceCards,
   handleOnEdit,
 }) {
+  const history = useHistory()
   return (
     <Card isActive={isActive}>
-      <EditButton onClick={() => handleOnEdit()} />
       <Header>
-        <Description>{description}</Description>
+        <Minute>3´</Minute>
         <ToggleContainer>
           {isActive ? (
             <PauseButton
@@ -55,97 +57,135 @@ export default function SequenceCard({
           )}
         </ToggleContainer>
       </Header>
-      {tag ? (
-        <InfoIfTag>
-          <TagAndLength>
+      <CardContent>
+        <InfoAndTimecode
+          info="dauer"
+          timecode={getFormatedTimecode(lengthTimeCode)}
+        />
+        <Description>{description}</Description>
+      </CardContent>
+      {tag && (
+        <AdditionalCardContent>
+          <TagAndPlayer>
             <Tag>{tag}</Tag>
-            <Timecode>{getFormatedTimecode(lengthTimeCode)}</Timecode>
-          </TagAndLength>
-          <LowerThirdContainer>
-            <Name>
-              Spieler: <span>{playerName}</span>
-            </Name>
-            <TimecodeIn>
-              Bauchbinde IN:
-              <span>
-                {getLowerThirdTimeCodeIn(
-                  index,
-                  allSequenceCards,
-                  timeCodeLowerThirdIn
-                )}
-              </span>
-            </TimecodeIn>
-            <TimecodeOut>
-              Bauchbinde OUT:
-              <span>
-                {getLowerThirdTimeCodeOut(
-                  index,
-                  allSequenceCards,
-                  timeCodeLowerThirdIn,
-                  timeCodeLowerThirdLength
-                )}
-              </span>
-            </TimecodeOut>
-          </LowerThirdContainer>
-        </InfoIfTag>
-      ) : (
-        <Timecode>{getFormatedTimecode(lengthTimeCode)}</Timecode>
+            <Player>{playerName}</Player>
+          </TagAndPlayer>
+          <Line />
+          <LowerThirds>
+            <InfoAndTimecode
+              info="Bauchbinde in"
+              timecode={getLowerThirdTimeCodeIn(
+                index,
+                allSequenceCards,
+                timeCodeLowerThirdIn
+              )}
+            />
+            <InfoAndTimecode
+              info="bauchbinde out"
+              timecode={getLowerThirdTimeCodeOut(
+                index,
+                allSequenceCards,
+                timeCodeLowerThirdIn,
+                timeCodeLowerThirdLength
+              )}
+            />
+          </LowerThirds>
+        </AdditionalCardContent>
       )}
+
+      <CardFooter>
+        <EditButton
+          onClick={() => {
+            handleOnEdit()
+            history.push('/create')
+          }}
+        />
+      </CardFooter>
     </Card>
   )
 }
 
 const Card = styled.section`
-  border-radius: 10px;
+  border-radius: 30px;
   border: 1px solid grey;
+  color: white;
+  ${(props) => !props.isActive && 'opacity: 0.3;'}
   margin: 15px 20px;
-  padding: 10px 10px;
-  ${(props) => !props.isActive && 'background-color : #E7C5CA; color: grey;'}
+  padding: 20px 30px;
+  background: transparent
+    linear-gradient(
+      180deg,
+      var(--gradient-blue-top) 0%,
+      var(--gradient-blue-bottom) 100%
+    )
+    0% 0% no-repeat padding-box;
 `
 
+const CardContent = styled.section`
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+`
 const Description = styled.p`
+  font-size: 1em;
   word-break: break-word;
+  color: white;
 `
 const Header = styled.header`
   display: flex;
   justify-content: space-between;
-`
-const Timecode = styled.p`
-  font-weight: 800;
-  margin: 0;
-  text-align: right;
+  align-items: center;
 `
 
-const InfoIfTag = styled.div`
+const Minute = styled.h2`
+  font-size: 2em;
+  margin: 0;
+`
+
+const AdditionalCardContent = styled.section`
   display: flex;
   flex-direction: column;
+  padding: 0;
+  margin-top: 25px;
 `
-const TagAndLength = styled.div`
+const TagAndPlayer = styled.div`
+  display: flex;
   align-items: center;
+`
+
+const Player = styled.p`
+  font-size: 0.8em;
+  margin: 0;
+  padding: 0;
+  color: var(--font-greenish);
+`
+const Line = styled.hr`
+  width: 100%;
+  color: white;
+  margin: 20px 0;
+`
+
+const LowerThirds = styled.div`
   display: flex;
   justify-content: space-between;
 `
 
+const CardFooter = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+`
 const Tag = styled.div`
-  background-color: var(--tag-border-grey);
-  border-radius: 5px;
-  color: #8e8e8e;
-  height: 30px;
-  padding: 5px 6px;
-`
+  display: flex;
+  align-items: center;
+  border-radius: 50px;
+  border: 3px solid var(--orange-border);
+  color: var(--orange-border);
+  padding: 5px 15px;
+  margin-right: 20px;
 
-const LowerThirdContainer = styled.div`
-  margin: 15px 0;
-  &: (first-of-type) {
-    font-weight: 700;
-  }
+  font-size: 0.8em;
 `
-const Name = styled.p`
-  margin: 0;
-`
-const TimecodeIn = styled(Name)``
-const TimecodeOut = styled(Name)``
-
 const ToggleContainer = styled.div`
   height: 48px;
   width: 48px;

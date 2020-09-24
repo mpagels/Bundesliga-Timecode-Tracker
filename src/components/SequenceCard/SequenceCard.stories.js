@@ -33,4 +33,6 @@ WithTag.args = {
   timeCodeLowerThirdIn: '00:00:15:00',
   timeCodeLowerThirdOut: '00:00:23:00',
   isActive: true,
+  index: 0,
+  allSequenceCards: [{ description: 'Foo', timeCode: '2000', isActive: true }],
 }
