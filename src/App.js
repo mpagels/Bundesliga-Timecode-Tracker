@@ -348,7 +348,6 @@ export default function App() {
     const sequencesFromLocalStorage = loadFromLocalStorage('sequences')
     sequencesFromLocalStorage[sceneSelected][updateIndex] = updatedCard
     saveToLocalStorage('sequences', sequencesFromLocalStorage)
-    //saveSequenceToLocalStorage(updatedCard, updateIndex)
     setSequenceCards(sequencesFromLocalStorage)
     setUpdateCard('')
   }
@@ -389,23 +388,6 @@ export default function App() {
     setIsError(false)
     deleteSequencesFromStorage()
     setSequenceCards({ '1st': [], '2nd': [], interview: [], special: [] })
-  }
-
-  function saveSequenceToLocalStorage(sequenceCard, index) {
-    const sequencesFromLocalStorage = loadFromLocalStorage('sequences')
-
-    if (sequencesFromLocalStorage) {
-      const SequenceCards = [
-        ...sequencesFromLocalStorage.slice(0, index),
-        sequenceCard,
-        ...sequencesFromLocalStorage.slice(index + 1),
-      ]
-      saveToLocalStorage('sequences', SequenceCards)
-      setSequenceCards(SequenceCards)
-    } else {
-      saveToLocalStorage('sequences', [sequenceCard])
-      setSequenceCards([sequenceCard])
-    }
   }
 
   function deleteSequencesFromStorage() {

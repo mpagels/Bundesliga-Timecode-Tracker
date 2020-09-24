@@ -52,9 +52,9 @@ export default function NavBar({
             {location.pathname === '/special' && <ActiveBar></ActiveBar>}
           </Link>
         </li>
-        <li>
+        {/* <li>
           <p>INFO</p>
-        </li>
+        </li> */}
       </ul>
     </NavWrapper>
   )
