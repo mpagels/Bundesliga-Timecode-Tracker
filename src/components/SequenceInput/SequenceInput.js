@@ -14,7 +14,7 @@ import { useHistory } from 'react-router-dom'
 
 SequenceInput.propTypes = {
   onSaveClick: PropTypes.func.isRequired,
-  updateCard: PropTypes.string,
+  updateCard: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   handleOnUpdateCard: PropTypes.func,
   onUpdateCancel: PropTypes.func,
   isEmpty: PropTypes.bool.isRequired,
@@ -28,7 +28,6 @@ export default function SequenceInput({
   isEmpty,
   sceneSelected,
 }) {
-  console.log(sceneSelected)
   const tags = ['Tor', 'Rote Karte']
   const history = useHistory()
 
@@ -52,7 +51,7 @@ export default function SequenceInput({
     return () => {
       onUpdateCancel()
     }
-  }, [updateCard])
+  }, [updateCard, onUpdateCancel])
 
   useEffect(() => {
     setSceneSelect(updateCard ? sceneSelected : '')
@@ -71,7 +70,7 @@ export default function SequenceInput({
         ? updateCard.timeCodeLowerThirdLength
         : ''
     )
-  }, [updateCard])
+  }, [updateCard, sceneSelected])
 
   const isEmptyScene = useIsEmptyScene(description, timeCode)
   const isEmptyEvent = useIsEmptyEvent(
@@ -326,10 +325,8 @@ export default function SequenceInput({
         ? specialValidationPassed
         : halfTimeValidationPassedWithNoEvents
 
-    console.log('validatonFunc:', validationPassed)
-    console.log(specialValidationPassed())
     const timecode = sceneSelect === 'special' ? realTimeCode : timeCode
-    console.log('timecode', timecode)
+
     if (validationPassed()) {
       doSubmitAction(
         {
@@ -393,7 +390,7 @@ export default function SequenceInput({
   }
 
   function validateSceneSelect() {
-    return isDirty && sceneSelect === null
+    return isDirty && !sceneSelect
   }
 
   function validateDescription() {
@@ -436,7 +433,7 @@ export default function SequenceInput({
       !hasOnlyZeros &&
       activeTagIndex === null &&
       isCorrectTimeCode &&
-      sceneSelect !== null
+      sceneSelect
     )
   }
   function interviewValidationPassed() {
@@ -448,13 +445,12 @@ export default function SequenceInput({
     )
   }
   function specialValidationPassed() {
-    console.log(!isEmptySpecial, isCorrectRealTimeCode, sceneSelect !== null)
     return !isEmptySpecial && isCorrectRealTimeCode && sceneSelect !== null
   }
 
   function validationPassedWithEvent() {
     return !(
-      sceneSelect === null ||
+      !sceneSelect ||
       isEmptyScene ||
       isEmptyEvent ||
       hasOnlyZeros ||
@@ -467,10 +463,9 @@ export default function SequenceInput({
   }
 
   function isHalfTimeInput() {
-    return (
-      sceneSelect === null || sceneSelect === '1st' || sceneSelect === '2nd'
-    )
+    return !sceneSelect || sceneSelect === '1st' || sceneSelect === '2nd'
   }
+
   function isSpecialInput() {
     return sceneSelect === 'special'
   }

@@ -10,7 +10,6 @@ export default function NavBar({
   countSpecials,
 }) {
   const location = useLocation()
-  console.log(location.pathname)
   return (
     <NavWrapper>
       <ul>

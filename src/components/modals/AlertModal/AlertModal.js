@@ -51,14 +51,6 @@ const ErrorModal = styled.section`
   position: fixed;
   align-items: center;
 `
-
-const ErrorMessage = styled.h2`
-  color: red;
-  font-size: 20px;
-  padding: 10px 0;
-  text-align: center;
-`
-
 const InfoMessage = styled.p`
   font-size: 2.5em;
   color: var(--button-cancel);

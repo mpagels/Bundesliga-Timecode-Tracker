@@ -45,7 +45,7 @@ export default function SequenceCard({
   return (
     <Card isActive={isActive}>
       <Header>
-        <Minute>3´</Minute>
+        <Minute></Minute>
         <ToggleContainer>
           {isActive ? (
             <PauseButton
