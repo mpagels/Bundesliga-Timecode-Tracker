@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import NavBar from './components/NavBar/NavBar'
 import Header from './components/Header/Header'
-import { Switch, Route, useLocation } from 'react-router-dom'
+import { Switch, Route, useLocation, useHistory } from 'react-router-dom'
 import Settings from './components/pages/Settings'
 import SequenceCard from './components/SequenceCard/SequenceCard'
 import SequenceInput from './components/SequenceInput/SequenceInput'
@@ -14,6 +14,7 @@ import {
 } from './utils/localStorage'
 import ErrorModal from './components/modals/ErrorModal/ErrorModal'
 import AlertModal from './components/modals/AlertModal/AlertModal'
+import { formatter } from './utils/timeCodeFormatter'
 
 export default function App() {
   const [sequenceCards, setSequenceCards] = useState({
@@ -27,10 +28,13 @@ export default function App() {
   const [isError, setIsError] = useState()
   const [isAlert, setIsAlert] = useState()
   const [sceneSelected, setSceneSelected] = useState()
+  const [summaryLength, setSummaryLength] = useState()
   const locationPath = useLocation()
+  const history = useHistory()
 
   useEffect(() => {
     const sequencesFromLocalStorage = loadFromLocalStorage('sequences')
+    const summaryLength = loadFromLocalStorage('summaryLength')
     sequencesFromLocalStorage
       ? setSequenceCards(sequencesFromLocalStorage)
       : setSequenceCards({
@@ -39,9 +43,9 @@ export default function App() {
           interview: [],
           special: [],
         })
+    summaryLength && setSummaryLength(summaryLength)
   }, [])
 
-  console.log(sequenceCards)
   document.body.style.overflowY = isError || isAlert ? 'hidden' : 'unset'
   const isEmpty = sequenceCards.length === 0
 
@@ -59,7 +63,6 @@ export default function App() {
       .split(':')
       .join('')
       .slice(2)
-  console.log(lengthFirstHalf)
   return (
     <>
       <Switch>
@@ -69,6 +72,7 @@ export default function App() {
             title="TIMECODE TRACKER"
             type="big"
             totalLength={getTimecodeTotalLengthFromSequenceCards(allCards)}
+            duration={summaryLength ? formatter(summaryLength) : '00:00'}
           />
           <Main marginTop={160}>
             {sequenceCards['1st']?.length === 0 || !sequenceCards['1st'] ? (
@@ -138,7 +142,10 @@ export default function App() {
           )}
           <Header title="EINSTELLUNGEN" type="small" isCloseButton={true} />
           <Main marginTop={100}>
-            <Settings onClick={() => setIsAlert(true)} />
+            <Settings
+              onClick={() => setIsAlert(true)}
+              handleSummerySave={setSummaryLength}
+            />
           </Main>
         </Route>
 
@@ -148,6 +155,7 @@ export default function App() {
             title="TIMECODE TRACKER"
             type="big"
             totalLength={getTimecodeTotalLengthFromSequenceCards(allCards)}
+            duration={summaryLength ? formatter(summaryLength) : '00:00'}
           />
           <Main marginTop={160}>
             {sequenceCards['interview']?.length === 0 ||
@@ -195,6 +203,7 @@ export default function App() {
             title="TIMECODE TRACKER"
             type="big"
             totalLength={getTimecodeTotalLengthFromSequenceCards(allCards)}
+            duration={summaryLength ? formatter(summaryLength) : '00:00'}
           />
           <Main marginTop={160}>
             {sequenceCards['special']?.length === 0 ||
@@ -301,21 +310,6 @@ export default function App() {
             />
           </Main>
         </Route>
-
-        <Route path="/settings">
-          {isAlert && (
-            <AlertModal
-              handleOnOk={handleAlertOk}
-              handleOnCancel={handleAlertCancel}
-            >
-              ACHTUNG, WIRKLICH ALLE DATEN DES LETZTEN SPIELTAGES LÖSCHEN?
-            </AlertModal>
-          )}
-          <Header title="EINSTELLUNGEN" type="small" isCloseButton={true} />
-          <Main marginTop={100}>
-            <Settings onClick={() => setIsAlert(true)} />
-          </Main>
-        </Route>
       </Switch>
 
       <NavBar
@@ -392,6 +386,7 @@ export default function App() {
 
   function deleteSequencesFromStorage() {
     deleteFromLocalStorage('sequences')
+    deleteFromLocalStorage('summaryLength')
     resetStates()
   }
 
@@ -404,6 +399,7 @@ export default function App() {
     })
     setUpdateIndex(null)
     setUpdateCard('')
+    setSummaryLength('')
   }
 
   function handleAlertCancel() {
@@ -413,6 +409,7 @@ export default function App() {
   function handleAlertOk() {
     deleteSequencesFromStorage()
     setIsAlert(false)
+    history.push('/')
   }
 }
 

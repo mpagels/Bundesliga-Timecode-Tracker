@@ -45,7 +45,11 @@ export default function Header({
       {type === 'big' && (
         <BubbleWrapper>
           <TimeCodeBubble title="GESAMTLÄNGE" timeCode={totalLength} />
-          {/* <TimeCodeBubble title="VORGABE" timeCode={duration} /> */}
+          <TimeCodeBubble
+            title="VORGABE"
+            timeCode={duration}
+            isMinOnly={true}
+          />
         </BubbleWrapper>
       )}
     </Wrapper>

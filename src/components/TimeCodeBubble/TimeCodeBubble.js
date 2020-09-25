@@ -1,10 +1,13 @@
 import React from 'react'
 import styled from 'styled-components/macro'
-export default function TimeCodeBubble({ title, timeCode }) {
+export default function TimeCodeBubble({ title, timeCode, isMinOnly = false }) {
   return (
     <BubbleWrapper>
       <ForWhat>{title}</ForWhat>
-      <TimeCode>{timeCode}</TimeCode>
+      <TimeCode>
+        {timeCode}
+        {isMinOnly && 'min'}
+      </TimeCode>
     </BubbleWrapper>
   )
 }
