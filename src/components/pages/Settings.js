@@ -1,17 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import TimecodeInput from '../TimecodeTracker/TimecodeInput'
 import ValidationError from '../SequenceInput/ValidationError'
 import { formatter } from '../../utils/timeCodeFormatter'
 import preventCursorJumpToEnd from '../../utils/preventCursorJumpToEnd'
-import { saveToLocalStorage } from '../../utils/localStorage'
+import {
+  saveToLocalStorage,
+  loadFromLocalStorage,
+} from '../../utils/localStorage'
 
 export default function Settings({ onClick, handleSummerySave }) {
   const [summaryLength, setSummaryLength] = useState('')
   const [hasError, setHasError] = useState(false)
   const history = useHistory()
   const isActive = summaryLength.length > 0
+
+  useEffect(() => {
+    const summaryLength = loadFromLocalStorage('summaryLength')
+    summaryLength && setSummaryLength(summaryLength)
+  }, [])
+
   return (
     <PageWrapper>
       <TimecodeInput
