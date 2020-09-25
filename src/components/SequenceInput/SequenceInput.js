@@ -14,7 +14,7 @@ import { useHistory } from 'react-router-dom'
 
 SequenceInput.propTypes = {
   onSaveClick: PropTypes.func.isRequired,
-  updateCard: PropTypes.string,
+  updateCard: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   handleOnUpdateCard: PropTypes.func,
   onUpdateCancel: PropTypes.func,
   isEmpty: PropTypes.bool.isRequired,
@@ -26,13 +26,16 @@ export default function SequenceInput({
   handleOnUpdateCard,
   onUpdateCancel,
   isEmpty,
+  sceneSelected,
 }) {
   const tags = ['Tor', 'Rote Karte']
   const history = useHistory()
 
   const [activeTagIndex, setActiveTagIndex] = useState(null)
+  const [sceneSelect, setSceneSelect] = useState(null)
   const [description, setDescription] = useState('')
   const [timeCode, setTimeCode] = useState('')
+  const [realTimeCode, setRealTimeCode] = useState('')
   const [isDirty, setIsDirty] = useState(false)
   const [playerName, setPlayerName] = useState('')
   const [timeCodeLowerThirdIn, setTimeCodeLowerThirdIn] = useState('')
@@ -48,9 +51,10 @@ export default function SequenceInput({
     return () => {
       onUpdateCancel()
     }
-  }, [updateCard])
+  }, [updateCard, onUpdateCancel])
 
   useEffect(() => {
+    setSceneSelect(updateCard ? sceneSelected : '')
     setDescription(updateCard ? updateCard.description : '')
     setTimeCode(updateCard ? updateCard.timeCode : '')
     setPlayerName(updateCard.playerName ? updateCard.playerName : '')
@@ -60,12 +64,13 @@ export default function SequenceInput({
     setTimeCodeLowerThirdIn(
       updateCard.timeCodeLowerThirdIn ? updateCard.timeCodeLowerThirdIn : ''
     )
+    setRealTimeCode(updateCard ? updateCard.timeCode : '')
     setTimeCodeLowerThirdLength(
       updateCard.timeCodeLowerThirdLength
         ? updateCard.timeCodeLowerThirdLength
         : ''
     )
-  }, [updateCard])
+  }, [updateCard, sceneSelected])
 
   const isEmptyScene = useIsEmptyScene(description, timeCode)
   const isEmptyEvent = useIsEmptyEvent(
@@ -73,11 +78,19 @@ export default function SequenceInput({
     timeCodeLowerThirdIn,
     timeCodeLowerThirdLength
   )
+
+  const isEmptySpecial = useIsEmptyScene(description, realTimeCode)
   const [
     hasOnlyZeros,
     lowerThirdInHasOnlyZeros,
     lowerThirdOutHasOnlyZeros,
-  ] = useHasZeros(timeCode, timeCodeLowerThirdIn, timeCodeLowerThirdLength)
+    realTimeHasOnlyZeros,
+  ] = useHasZeros(
+    timeCode,
+    timeCodeLowerThirdIn,
+    timeCodeLowerThirdLength,
+    realTimeCode
+  )
 
   const [
     isCorrectLowerThirdIn,
@@ -91,13 +104,74 @@ export default function SequenceInput({
   )
 
   const isCorrectTimeCode = timeCode.length % 2 === 0
+  const isCorrectRealTimeCode = realTimeCode.length === 8
 
   return (
     <Wrapper>
       <form onSubmit={handleSubmit}>
+        <SceneSelectWrapper>
+          <SceneType>
+            <Scene htmlFor="1st">
+              <input
+                type="radio"
+                id="1st"
+                name="typeOfScene"
+                value="1st"
+                checked={sceneSelect === '1st'}
+                onChange={handleSceneChange}
+                disabled={updateCard && sceneSelect !== '1st'}
+              />
+              <SceneName>1st</SceneName>
+            </Scene>
+
+            <Scene htmlFor="2nd">
+              <input
+                type="radio"
+                id="2nd"
+                name="typeOfScene"
+                value="2nd"
+                checked={sceneSelect === '2nd'}
+                onChange={handleSceneChange}
+                disabled={updateCard && sceneSelect !== '2st'}
+              />
+              <SceneName>2nd</SceneName>
+            </Scene>
+
+            <Scene htmlFor="interview">
+              <input
+                type="radio"
+                id="interview"
+                name="typeOfScene"
+                value="interview"
+                checked={sceneSelect === 'interview'}
+                onChange={handleSceneChange}
+                disabled={updateCard && sceneSelect !== 'interview'}
+              />
+              <SceneName>Interview</SceneName>
+            </Scene>
+
+            <Scene htmlFor="special">
+              <input
+                type="radio"
+                id="special"
+                name="typeOfScene"
+                value="special"
+                checked={sceneSelect === 'special'}
+                onChange={handleSceneChange}
+                disabled={updateCard && sceneSelect !== 'special'}
+              />
+              <SceneName>Special</SceneName>
+            </Scene>
+          </SceneType>
+          <ValidationError
+            errorMessage="Wähle eine Szene aus"
+            hasError={validateSceneSelect()}
+          />
+        </SceneSelectWrapper>
         <StyledLabel htmlFor="description">
           {updateCard ? 'Szene bearbeiten' : 'Neue Szene hinzufügen'}
         </StyledLabel>
+
         <SceneDescription
           onChange={(event) =>
             (event.target.value.trim().length !== 0 ||
@@ -114,27 +188,49 @@ export default function SequenceInput({
           errorMessage="Szenenbeschreibung fehlt"
           hasError={validateDescription()}
         />
-        <TimecodeInput
-          title="SZENENLÄNGE"
-          onBackSpace={preventCursorJumpToEnd}
-          inputValue={formatter(timeCode)}
-          onChange={(event) => handleTimeCodeChange(event, setTimeCode)}
-        />
-        <ValidationError
-          errorMessage="Timecode fehlt oder ist fehlerhaft"
-          hasError={validateSceneLength()}
-        />
-        <TagContainer>
-          {tags.map((tag, index) => (
-            <Tag
-              onClick={onClickTagHandler}
-              index={index}
-              title={tag}
-              key={tag}
-              isActive={activeTagIndex === index}
+        {isSpecialInput() ? (
+          <>
+            <TimecodeInput
+              title="REALTIMECODE"
+              onBackSpace={preventCursorJumpToEnd}
+              inputValue={formatter(realTimeCode)}
+              placeholder="HH:MM:SS:FF"
+              onChange={(event) =>
+                handleTimeCodeChange(event, setRealTimeCode, true)
+              }
             />
-          ))}
-        </TagContainer>
+            <ValidationError
+              errorMessage="Timecode fehlt oder ist fehlerhaft"
+              hasError={validateRealTimeCode()}
+            />
+          </>
+        ) : (
+          <>
+            <TimecodeInput
+              title="SZENENLÄNGE"
+              onBackSpace={preventCursorJumpToEnd}
+              inputValue={formatter(timeCode)}
+              onChange={(event) => handleTimeCodeChange(event, setTimeCode)}
+            />
+            <ValidationError
+              errorMessage="Timecode fehlt oder ist fehlerhaft"
+              hasError={validateSceneLength()}
+            />
+          </>
+        )}
+        {isHalfTimeInput() && (
+          <TagContainer>
+            {tags.map((tag, index) => (
+              <Tag
+                onClick={onClickTagHandler}
+                index={index}
+                title={tag}
+                key={tag}
+                isActive={activeTagIndex === index}
+              />
+            ))}
+          </TagContainer>
+        )}
         {activeTagIndex === null || (
           <>
             <StyledLabel htmlFor="playerName">SPIELERNAME</StyledLabel>
@@ -195,10 +291,16 @@ export default function SequenceInput({
     </Wrapper>
   )
 
-  function handleTimeCodeChange(event, timeCodeSetterFunc) {
+  function handleTimeCodeChange(
+    event,
+    timeCodeSetterFunc,
+    isRealTimeCode = false
+  ) {
+    const LENGTH = isRealTimeCode ? 12 : 9
+
     const { value } = event.target
     const formattedTimeCode = getTimeCodeUnFormatted(value)
-    value.length < 9 &&
+    value.length < LENGTH &&
       RegExp('^[0-9]*$').test(formattedTimeCode) &&
       timeCodeSetterFunc(formattedTimeCode)
   }
@@ -207,29 +309,48 @@ export default function SequenceInput({
     setDescription(event.target.value)
   }
 
+  function handleSceneChange(event) {
+    setSceneSelect(event.target.value)
+  }
+
   function handleSubmit(event) {
     event.preventDefault()
     setIsDirty(true)
     const doSubmitAction = updateCard ? handleOnUpdateCard : onSaveClick
 
-    if (validationPassedWithNoEvent()) {
-      doSubmitAction({
-        description,
-        timeCode,
-        isActive: true,
-      })
+    const validationPassed =
+      sceneSelect === 'interview'
+        ? interviewValidationPassed
+        : sceneSelect === 'special'
+        ? specialValidationPassed
+        : halfTimeValidationPassedWithNoEvents
+
+    const timecode = sceneSelect === 'special' ? realTimeCode : timeCode
+
+    if (validationPassed()) {
+      doSubmitAction(
+        {
+          description,
+          timeCode: timecode,
+          isActive: true,
+        },
+        sceneSelect
+      )
       resetState()
       history.goBack()
     } else if (validationPassedWithEvent()) {
-      doSubmitAction({
-        description,
-        timeCode,
-        tag: tags[activeTagIndex],
-        timeCodeLowerThirdIn,
-        timeCodeLowerThirdLength,
-        playerName,
-        isActive: true,
-      })
+      doSubmitAction(
+        {
+          description,
+          timeCode,
+          tag: tags[activeTagIndex],
+          timeCodeLowerThirdIn,
+          timeCodeLowerThirdLength,
+          playerName,
+          isActive: true,
+        },
+        sceneSelect
+      )
       resetState()
       history.goBack()
     }
@@ -247,6 +368,7 @@ export default function SequenceInput({
   }
 
   function resetState() {
+    setSceneSelect(null)
     setIsDirty(false)
     setDescription('')
     setTimeCode('')
@@ -267,12 +389,22 @@ export default function SequenceInput({
     return timeCode.split(':').join('')
   }
 
+  function validateSceneSelect() {
+    return isDirty && !sceneSelect
+  }
+
   function validateDescription() {
     return isDirty && isEmptyScene && !description
   }
 
   function validateSceneLength() {
     return isDirty && (!timeCode || hasOnlyZeros || !isCorrectTimeCode)
+  }
+  function validateRealTimeCode() {
+    return (
+      isDirty &&
+      (!realTimeCode || realTimeHasOnlyZeros || !isCorrectRealTimeCode)
+    )
   }
 
   function validateLowerThirdIn() {
@@ -295,17 +427,30 @@ export default function SequenceInput({
     )
   }
 
-  function validationPassedWithNoEvent() {
+  function halfTimeValidationPassedWithNoEvents() {
     return (
       !isEmptyScene &&
       !hasOnlyZeros &&
       activeTagIndex === null &&
-      isCorrectTimeCode
+      isCorrectTimeCode &&
+      sceneSelect
     )
+  }
+  function interviewValidationPassed() {
+    return (
+      !isEmptyScene &&
+      activeTagIndex === null &&
+      isCorrectTimeCode &&
+      sceneSelect !== null
+    )
+  }
+  function specialValidationPassed() {
+    return !isEmptySpecial && isCorrectRealTimeCode && sceneSelect !== null
   }
 
   function validationPassedWithEvent() {
     return !(
+      !sceneSelect ||
       isEmptyScene ||
       isEmptyEvent ||
       hasOnlyZeros ||
@@ -316,14 +461,60 @@ export default function SequenceInput({
       !checkCorrectTimeCode()
     )
   }
+
+  function isHalfTimeInput() {
+    return !sceneSelect || sceneSelect === '1st' || sceneSelect === '2nd'
+  }
+
+  function isSpecialInput() {
+    return sceneSelect === 'special'
+  }
 }
 
 const Wrapper = styled.section`
   margin-bottom: 80px;
-  padding: 10px;
+  padding: 0 10px 10px 10px;
   margin: 0 20px 80px;
   ${(props) => props.isEmpty && 'box-shadow: 0 0 3px 3px var(--error-redish);'}
 `
+const SceneSelectWrapper = styled.section`
+  margin: 0 0 10px;
+`
+const SceneType = styled.div`
+  display: flex;
+`
+
+const Scene = styled.label`
+  align-self: center;
+  cursor: pointer;
+  font-size: 22px;
+  width: 25%;
+  margin: 0 5px 0 0;
+  & input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+    &:checked ~ span {
+      background-color: #0032c8;
+      color: white;
+    }
+  }
+`
+const SceneName = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'BaiJamjuree';
+  font-size: 0.5em;
+  width: 100%;
+  padding: 5px;
+  border-radius: 20px;
+  border: 2px solid #0032c8;
+  color: #0032c8;
+`
+
 const SceneDescription = styled.textarea`
   font-size: 1em;
   width: 100%;

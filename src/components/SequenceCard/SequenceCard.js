@@ -5,6 +5,7 @@ import { ReactComponent as PauseButton } from '../../assets/pause-button.svg'
 import { ReactComponent as EditButton } from '../../assets/edit-button.svg'
 import PropTypes from 'prop-types'
 import {
+  getTimecodeTotalLength,
   getFormatedTimecode,
   getLowerThirdTimeCodeIn,
   getLowerThirdTimeCodeOut,
@@ -37,12 +38,14 @@ export default function SequenceCard({
   handleToggle,
   allSequenceCards,
   handleOnEdit,
+  previousTimeCode = '00',
+  isSpecial = false,
 }) {
   const history = useHistory()
   return (
     <Card isActive={isActive}>
       <Header>
-        <Minute>3´</Minute>
+        <Minute></Minute>
         <ToggleContainer>
           {isActive ? (
             <PauseButton
@@ -59,7 +62,7 @@ export default function SequenceCard({
       </Header>
       <CardContent>
         <InfoAndTimecode
-          info="dauer"
+          info={isSpecial ? 'timecode' : 'dauer'}
           timecode={getFormatedTimecode(lengthTimeCode)}
         />
         <Description>{description}</Description>
@@ -77,7 +80,9 @@ export default function SequenceCard({
               timecode={getLowerThirdTimeCodeIn(
                 index,
                 allSequenceCards,
-                timeCodeLowerThirdIn
+                getTimecodeTotalLength([timeCodeLowerThirdIn, previousTimeCode])
+                  .split(':')
+                  .join('')
               )}
             />
             <InfoAndTimecode
@@ -85,7 +90,10 @@ export default function SequenceCard({
               timecode={getLowerThirdTimeCodeOut(
                 index,
                 allSequenceCards,
-                timeCodeLowerThirdIn,
+                getTimecodeTotalLength([timeCodeLowerThirdIn, previousTimeCode])
+                  .split(':')
+                  .join(''),
+
                 timeCodeLowerThirdLength
               )}
             />

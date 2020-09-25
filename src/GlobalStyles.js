@@ -48,6 +48,6 @@ body {
     --white:250, 250, 250, 1;
     --solid-grey: #c8c8c8;
     --dark-grey: #737373;
-
+    --special-orange: #FF7D00;
     }
 `

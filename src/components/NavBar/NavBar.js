@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components/macro'
+import { getTimecodeTotalLengthFromSequenceCards } from '../../utils/Timecode'
+import { Link, useLocation } from 'react-router-dom'
 
 export default function NavBar({
   firstHalfTimeCode,
@@ -7,28 +9,52 @@ export default function NavBar({
   interviewTimeCode,
   countSpecials,
 }) {
+  const location = useLocation()
   return (
     <NavWrapper>
       <ul>
         <li>
-          <p>1ST</p>
-          <span>{firstHalfTimeCode}</span>
+          <Link to="/">
+            <p>1ST</p>
+            <span>
+              {getTimecodeTotalLengthFromSequenceCards(firstHalfTimeCode)}
+            </span>
+          </Link>
+          {location.pathname === '/' && <ActiveBar></ActiveBar>}
         </li>
         <li>
-          <p>2ND</p>
-          <span>{secondHalfTimeCode}</span>
+          <Link to="/2nd">
+            <p>2ND</p>
+            <span>
+              {getTimecodeTotalLengthFromSequenceCards(secondHalfTimeCode)}
+            </span>
+            {location.pathname === '/2nd' && <ActiveBar></ActiveBar>}
+          </Link>
         </li>
         <li>
-          <p>INTERVIEW</p>
-          <span>{interviewTimeCode} </span>
+          <Link to="/interview">
+            <p>INTERVIEW</p>
+            <span>
+              {getTimecodeTotalLengthFromSequenceCards(interviewTimeCode)}
+            </span>
+            {location.pathname === '/interview' && <ActiveBar></ActiveBar>}
+          </Link>
         </li>
         <li>
-          <p>SPECIALS</p>
-          <span>{countSpecials}</span>
+          <Link to="/special">
+            <SpecialWrapper>
+              {countSpecials > 0 && (
+                <SpecialCouter>{countSpecials}</SpecialCouter>
+              )}
+
+              <p>SPECIALS</p>
+            </SpecialWrapper>
+            {location.pathname === '/special' && <ActiveBar></ActiveBar>}
+          </Link>
         </li>
-        <li>
+        {/* <li>
           <p>INFO</p>
-        </li>
+        </li> */}
       </ul>
     </NavWrapper>
   )
@@ -66,14 +92,52 @@ const NavWrapper = styled.nav`
     padding: 10px;
     width: 20%;
 
+    & a {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
     & p {
       color: var(--font-blue);
       margin: 0;
       padding: 3px;
+      font-weight: 700;
     }
 
     & span {
       color: var(--font-blue);
     }
   }
+`
+
+const ActiveBar = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 20%;
+  height: 3px;
+  background-color: var(--font-blue);
+  margin: 0;
+  padding: 0;
+`
+
+const SpecialWrapper = styled.div`
+  position: relative;
+`
+
+const SpecialCouter = styled.div`
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'BaiJamjuree';
+  font-size: 1em;
+  color: white;
+  background-color: var(--special-orange);
+  border-radius: 50px;
+  width: 18px;
+  height: 18px;
 `

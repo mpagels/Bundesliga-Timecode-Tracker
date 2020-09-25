@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import NavBar from './components/NavBar/NavBar'
 import Header from './components/Header/Header'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import { Switch, Route, useLocation } from 'react-router-dom'
 import Settings from './components/pages/Settings'
 import SequenceCard from './components/SequenceCard/SequenceCard'
 import SequenceInput from './components/SequenceInput/SequenceInput'
@@ -16,35 +16,67 @@ import ErrorModal from './components/modals/ErrorModal/ErrorModal'
 import AlertModal from './components/modals/AlertModal/AlertModal'
 
 export default function App() {
-  const [sequenceCards, setSequenceCards] = useState([])
+  const [sequenceCards, setSequenceCards] = useState({
+    '1st': [],
+    '2nd': [],
+    interview: [],
+    special: [],
+  })
   const [updateCard, setUpdateCard] = useState()
   const [updateIndex, setUpdateIndex] = useState()
   const [isError, setIsError] = useState()
   const [isAlert, setIsAlert] = useState()
+  const [sceneSelected, setSceneSelected] = useState()
+  const locationPath = useLocation()
 
   useEffect(() => {
     const sequencesFromLocalStorage = loadFromLocalStorage('sequences')
-    sequencesFromLocalStorage && setSequenceCards(sequencesFromLocalStorage)
+    sequencesFromLocalStorage
+      ? setSequenceCards(sequencesFromLocalStorage)
+      : setSequenceCards({
+          '1st': [],
+          '2nd': [],
+          interview: [],
+          special: [],
+        })
   }, [])
 
+  console.log(sequenceCards)
   document.body.style.overflowY = isError || isAlert ? 'hidden' : 'unset'
   const isEmpty = sequenceCards.length === 0
 
+  const allCards = sequenceCards
+    ? [
+        ...sequenceCards['1st'],
+        ...sequenceCards['2nd'],
+        ...sequenceCards['interview'],
+      ]
+    : []
+
+  const lengthFirstHalf =
+    sequenceCards['1st'].length > 0 &&
+    getTimecodeTotalLengthFromSequenceCards(sequenceCards['1st'])
+      .split(':')
+      .join('')
+      .slice(2)
+  console.log(lengthFirstHalf)
   return (
-    <Router>
+    <>
       <Switch>
         <Route exact path="/">
           {isError && <ErrorModal handleErrorOK={handleErrorOK} />}
           <Header
             title="TIMECODE TRACKER"
             type="big"
-            totalLength={getTimecodeTotalLengthFromSequenceCards(sequenceCards)}
+            totalLength={getTimecodeTotalLengthFromSequenceCards(allCards)}
           />
           <Main marginTop={160}>
-            {sequenceCards.length === 0 ? (
+            {sequenceCards['1st']?.length === 0 || !sequenceCards['1st'] ? (
               <Hint>FÜGE EINE SZENE HINZU</Hint>
             ) : (
-              sequenceCards.map(
+              sequenceCards[
+                '1st'
+              ].map(
                 (
                   {
                     description,
@@ -89,6 +121,182 @@ export default function App() {
               updateCard={updateCard}
               handleOnUpdateCard={handleOnUpdateCard}
               onUpdateCancel={onUpdateCancel}
+              sceneSelected={sceneSelected}
+              isEmpty={isEmpty}
+            />
+          </Main>
+        </Route>
+
+        <Route path="/settings">
+          {isAlert && (
+            <AlertModal
+              handleOnOk={handleAlertOk}
+              handleOnCancel={handleAlertCancel}
+            >
+              ACHTUNG, WIRKLICH ALLE DATEN DES LETZTEN SPIELTAGES LÖSCHEN?
+            </AlertModal>
+          )}
+          <Header title="EINSTELLUNGEN" type="small" isCloseButton={true} />
+          <Main marginTop={100}>
+            <Settings onClick={() => setIsAlert(true)} />
+          </Main>
+        </Route>
+
+        <Route path="/interview">
+          {isError && <ErrorModal handleErrorOK={handleErrorOK} />}
+          <Header
+            title="TIMECODE TRACKER"
+            type="big"
+            totalLength={getTimecodeTotalLengthFromSequenceCards(allCards)}
+          />
+          <Main marginTop={160}>
+            {sequenceCards['interview']?.length === 0 ||
+            !sequenceCards['interview'] ? (
+              <Hint>FÜGE EINE SZENE HINZU</Hint>
+            ) : (
+              sequenceCards[
+                'interview'
+              ].map(
+                (
+                  {
+                    description,
+                    timeCode,
+                    tag,
+                    timeCodeLowerThirdIn,
+                    timeCodeLowerThirdLength,
+                    playerName,
+                    isActive,
+                  },
+                  index,
+                  arrayOfAllCards
+                ) => (
+                  <SequenceCard
+                    description={description}
+                    key={index}
+                    index={index}
+                    allSequenceCards={arrayOfAllCards}
+                    lengthTimeCode={timeCode}
+                    tag={tag}
+                    timeCodeLowerThirdIn={timeCodeLowerThirdIn}
+                    timeCodeLowerThirdLength={timeCodeLowerThirdLength}
+                    playerName={playerName}
+                    isActive={isActive}
+                    handleToggle={handleToggle}
+                    handleOnEdit={() => handleOnEdit(index)}
+                  />
+                )
+              )
+            )}
+          </Main>
+        </Route>
+        <Route path="/special">
+          {isError && <ErrorModal handleErrorOK={handleErrorOK} />}
+          <Header
+            title="TIMECODE TRACKER"
+            type="big"
+            totalLength={getTimecodeTotalLengthFromSequenceCards(allCards)}
+          />
+          <Main marginTop={160}>
+            {sequenceCards['special']?.length === 0 ||
+            !sequenceCards['special'] ? (
+              <Hint>FÜGE EINE SZENE HINZU</Hint>
+            ) : (
+              sequenceCards[
+                'special'
+              ].map(
+                (
+                  {
+                    description,
+                    timeCode,
+                    tag,
+                    timeCodeLowerThirdIn,
+                    timeCodeLowerThirdLength,
+                    playerName,
+                    isActive,
+                  },
+                  index,
+                  arrayOfAllCards
+                ) => (
+                  <SequenceCard
+                    isSpecial={true}
+                    description={description}
+                    key={index}
+                    index={index}
+                    allSequenceCards={arrayOfAllCards}
+                    lengthTimeCode={timeCode}
+                    tag={tag}
+                    timeCodeLowerThirdIn={timeCodeLowerThirdIn}
+                    timeCodeLowerThirdLength={timeCodeLowerThirdLength}
+                    playerName={playerName}
+                    isActive={isActive}
+                    handleToggle={handleToggle}
+                    handleOnEdit={() => handleOnEdit(index)}
+                  />
+                )
+              )
+            )}
+          </Main>
+        </Route>
+        <Route path="/2nd">
+          {isError && <ErrorModal handleErrorOK={handleErrorOK} />}
+          <Header
+            title="TIMECODE TRACKER"
+            type="big"
+            totalLength={getTimecodeTotalLengthFromSequenceCards(allCards)}
+          />
+          <Main marginTop={160}>
+            {sequenceCards['2nd']?.length === 0 || !sequenceCards['2nd'] ? (
+              <Hint>FÜGE EINE SZENE HINZU</Hint>
+            ) : (
+              sequenceCards[
+                '2nd'
+              ].map(
+                (
+                  {
+                    description,
+                    timeCode,
+                    tag,
+                    timeCodeLowerThirdIn,
+                    timeCodeLowerThirdLength,
+                    playerName,
+                    isActive,
+                  },
+                  index,
+                  arrayOfAllCards
+                ) => (
+                  <SequenceCard
+                    description={description}
+                    key={index}
+                    index={index}
+                    allSequenceCards={arrayOfAllCards}
+                    lengthTimeCode={timeCode}
+                    tag={tag}
+                    timeCodeLowerThirdIn={timeCodeLowerThirdIn}
+                    timeCodeLowerThirdLength={timeCodeLowerThirdLength}
+                    playerName={playerName}
+                    isActive={isActive}
+                    handleToggle={handleToggle}
+                    handleOnEdit={() => handleOnEdit(index)}
+                    previousTimeCode={lengthFirstHalf.split(':').join('')}
+                  />
+                )
+              )
+            )}
+          </Main>
+        </Route>
+
+        <Route path="/create">
+          <Header
+            title="NEUE SZENE HINZUFÜGEN"
+            type="small"
+            isCloseButton={true}
+          />
+          <Main marginTop={100}>
+            <SequenceInput
+              onSaveClick={onSave}
+              updateCard={updateCard}
+              handleOnUpdateCard={handleOnUpdateCard}
+              onUpdateCancel={onUpdateCancel}
               isEmpty={isEmpty}
             />
           </Main>
@@ -110,26 +318,37 @@ export default function App() {
         </Route>
       </Switch>
 
-      {/* <NavBar /> */}
-    </Router>
+      <NavBar
+        firstHalfTimeCode={sequenceCards['1st']}
+        secondHalfTimeCode={sequenceCards['2nd']}
+        interviewTimeCode={sequenceCards['interview']}
+        countSpecials={sequenceCards['special'].length}
+      />
+    </>
   )
-  function onSave(sequenceCard) {
+  function onSave(sequenceCard, select) {
     const sequencesFromLocalStorage = loadFromLocalStorage('sequences')
 
     if (sequencesFromLocalStorage) {
-      saveToLocalStorage('sequences', [
-        ...sequencesFromLocalStorage,
-        sequenceCard,
-      ])
-      setSequenceCards([...sequencesFromLocalStorage, sequenceCard])
+      sequencesFromLocalStorage[select] =
+        sequencesFromLocalStorage[select].length > 0
+          ? [...sequencesFromLocalStorage[select], sequenceCard]
+          : [sequenceCard]
+      saveToLocalStorage('sequences', sequencesFromLocalStorage)
+      setSequenceCards(sequencesFromLocalStorage)
     } else {
-      saveToLocalStorage('sequences', [sequenceCard])
-      setSequenceCards([sequenceCard])
+      const sequences = { '1st': [], '2nd': [], interview: [], special: [] }
+      sequences[select] = [sequenceCard]
+      saveToLocalStorage('sequences', sequences)
+      setSequenceCards(sequences)
     }
   }
 
   function handleOnUpdateCard(updatedCard) {
-    saveSequenceToLocalStorage(updatedCard, updateIndex)
+    const sequencesFromLocalStorage = loadFromLocalStorage('sequences')
+    sequencesFromLocalStorage[sceneSelected][updateIndex] = updatedCard
+    saveToLocalStorage('sequences', sequencesFromLocalStorage)
+    setSequenceCards(sequencesFromLocalStorage)
     setUpdateCard('')
   }
 
@@ -138,20 +357,28 @@ export default function App() {
   }
 
   function handleToggle(index) {
+    const key =
+      locationPath.pathname === '/' ? '1st' : locationPath.pathname.slice(1)
     try {
-      const sequence = loadFromLocalStorage('sequences')[index]
+      const sequencesFromLocalStorage = loadFromLocalStorage('sequences')
+      const sequence = sequencesFromLocalStorage[key][index]
       sequence.isActive = !sequence.isActive
-      saveSequenceToLocalStorage(sequence, index)
+      sequencesFromLocalStorage[key][index] = sequence
+      saveToLocalStorage('sequences', sequencesFromLocalStorage)
+      setSequenceCards(sequencesFromLocalStorage)
     } catch {
       setIsError(true)
     }
   }
 
   function handleOnEdit(index) {
+    const key =
+      locationPath.pathname === '/' ? '1st' : locationPath.pathname.slice(1)
     const sequencesFromLocalStorage = loadFromLocalStorage('sequences')
     try {
-      setUpdateCard(sequencesFromLocalStorage[index])
+      setUpdateCard(sequencesFromLocalStorage[key][index])
       setUpdateIndex(index)
+      setSceneSelected(key)
     } catch {
       setIsError(true)
     }
@@ -159,24 +386,8 @@ export default function App() {
 
   function handleErrorOK() {
     setIsError(false)
-    setSequenceCards([])
-  }
-
-  function saveSequenceToLocalStorage(sequenceCard, index) {
-    const sequencesFromLocalStorage = loadFromLocalStorage('sequences')
-
-    if (sequencesFromLocalStorage) {
-      const SequenceCards = [
-        ...sequencesFromLocalStorage.slice(0, index),
-        sequenceCard,
-        ...sequencesFromLocalStorage.slice(index + 1),
-      ]
-      saveToLocalStorage('sequences', SequenceCards)
-      setSequenceCards(SequenceCards)
-    } else {
-      saveToLocalStorage('sequences', [sequenceCard])
-      setSequenceCards([sequenceCard])
-    }
+    deleteSequencesFromStorage()
+    setSequenceCards({ '1st': [], '2nd': [], interview: [], special: [] })
   }
 
   function deleteSequencesFromStorage() {
@@ -185,7 +396,12 @@ export default function App() {
   }
 
   function resetStates() {
-    setSequenceCards([])
+    setSequenceCards({
+      '1st': [],
+      '2nd': [],
+      interview: [],
+      special: [],
+    })
     setUpdateIndex(null)
     setUpdateCard('')
   }
