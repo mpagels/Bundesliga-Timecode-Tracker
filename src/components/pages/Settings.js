@@ -67,7 +67,6 @@ export default function Settings({ onClick, handleSummerySave }) {
       saveToLocalStorage('summaryLength', summaryLength)
       history.push('/')
     } else if (validateSummaryLength()) {
-      console.log('drin')
       setHasError(true)
     }
   }

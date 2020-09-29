@@ -1,6 +1,7 @@
 import { createGlobalStyle } from 'styled-components/macro'
 import BaiJamjureeSemiBoldItalic from './utils/fonts/bai-jamjuree.ttf'
 import BaiJamjureeSemiBoldItalic700 from './utils/fonts/bai-jamjuree700.ttf'
+import BaiJamjureeSemiBoldItalic200 from './utils/fonts/bai-jamjuree200.ttf'
 
 export default createGlobalStyle`
 
@@ -20,10 +21,19 @@ export default createGlobalStyle`
     font-style: italic;
     font-display: auto;
     }
+@font-face {
+    font-family: 'BaiJamjuree';
+    src: local('BaiJamjuree'),
+    url(${BaiJamjureeSemiBoldItalic200}) format('truetype');
+    font-weight: 200;
+    font-style: italic;
+    font-display: auto;
+    }
 
 * {
     box-sizing: border-box;
     font-family: 'BaiJamjuree';
+    font-weight: 600;
 }
 
 body {
