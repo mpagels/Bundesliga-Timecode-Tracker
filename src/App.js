@@ -15,6 +15,7 @@ import {
 import ErrorModal from './components/modals/ErrorModal/ErrorModal'
 import AlertModal from './components/modals/AlertModal/AlertModal'
 import { formatter } from './utils/timeCodeFormatter'
+import SummaryPage from './components/pages/summary/SummaryPage'
 
 export default function App() {
   const [sequenceCards, setSequenceCards] = useState({
@@ -252,6 +253,7 @@ export default function App() {
             title="TIMECODE TRACKER"
             type="big"
             totalLength={getTimecodeTotalLengthFromSequenceCards(allCards)}
+            duration={summaryLength ? formatter(summaryLength) : '00:00'}
           />
           <Main marginTop={160}>
             {sequenceCards['2nd']?.length === 0 || !sequenceCards['2nd'] ? (
@@ -308,6 +310,14 @@ export default function App() {
               onUpdateCancel={onUpdateCancel}
               isEmpty={isEmpty}
             />
+          </Main>
+        </Route>
+
+        <Route path="/info">
+          <Header title="ÜBERSICHT" type="big" isCloseButton={false} totalLength={getTimecodeTotalLengthFromSequenceCards(allCards)}
+            duration={summaryLength ? formatter(summaryLength) : '00:00'} />
+          <Main marginTop={160}>
+            <SummaryPage sequenceCards={sequenceCards} />
           </Main>
         </Route>
       </Switch>
