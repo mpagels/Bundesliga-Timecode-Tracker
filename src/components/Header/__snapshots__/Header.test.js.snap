@@ -1,0 +1,202 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correct 1`] = `
+<DocumentFragment>
+  <div
+    class="Header__Wrapper-sc-42wb12-0 kIEjuF"
+    type="small"
+  >
+    <div
+      class="Header__Top-sc-42wb12-1 hMdxRz"
+      type="small"
+    >
+      <h1
+        class="Header__StyledHeader-sc-42wb12-2 egjaic"
+      >
+        TIMECODE TRACKER
+      </h1>
+      <div
+        class="Header__ActionWrapper-sc-42wb12-3 bpFiNn"
+      >
+        <a
+          href="/settings"
+        >
+          <button
+            class="Header__Circle-sc-42wb12-5 cbzzXT"
+          >
+            <svg>
+              settings.svg
+            </svg>
+          </button>
+        </a>
+        <a
+          href="/create"
+        >
+          <button
+            class="Header__AddPlus-sc-42wb12-6 fAopbb"
+          >
+            <svg>
+              plus-white.svg
+            </svg>
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`renders correctly a big type header 1`] = `
+<DocumentFragment>
+  <div
+    class="Header__Wrapper-sc-42wb12-0 bfPzTh"
+    type="big"
+  >
+    <div
+      class="Header__Top-sc-42wb12-1 czgLcD"
+      type="big"
+    >
+      <h1
+        class="Header__StyledHeader-sc-42wb12-2 egjaic"
+      >
+        TIMECODE TRACKER
+      </h1>
+      <div
+        class="Header__ActionWrapper-sc-42wb12-3 bpFiNn"
+      >
+        <a
+          href="/settings"
+        >
+          <button
+            class="Header__Circle-sc-42wb12-5 cbzzXT"
+          >
+            <svg>
+              settings.svg
+            </svg>
+          </button>
+        </a>
+        <a
+          href="/create"
+        >
+          <button
+            class="Header__AddPlus-sc-42wb12-6 fAopbb"
+          >
+            <svg>
+              plus-white.svg
+            </svg>
+          </button>
+        </a>
+      </div>
+    </div>
+    <div
+      class="Header__BubbleWrapper-sc-42wb12-4 fpvdLP"
+    >
+      <div
+        class="TimeCodeBubble__BubbleWrapper-sc-1ve62kg-0 ddckpx"
+      >
+        <p
+          class="TimeCodeBubble__ForWhat-sc-1ve62kg-1 bZpzYP"
+        >
+          GESAMTLÄNGE
+        </p>
+        <p
+          class="TimeCodeBubble__TimeCode-sc-1ve62kg-2 hSwuJE"
+        >
+          00:00:00:00
+        </p>
+      </div>
+      <div
+        class="TimeCodeBubble__BubbleWrapper-sc-1ve62kg-0 ddckpx"
+      >
+        <p
+          class="TimeCodeBubble__ForWhat-sc-1ve62kg-1 bZpzYP"
+        >
+          VORGABE
+        </p>
+        <p
+          class="TimeCodeBubble__TimeCode-sc-1ve62kg-2 hSwuJE"
+        >
+          00:00:00:00min
+        </p>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`renders correctly a header with close button 1`] = `
+<DocumentFragment>
+  <div
+    class="Header__Wrapper-sc-42wb12-0 kIEjuF"
+    type="small"
+  >
+    <div
+      class="Header__Top-sc-42wb12-1 hMdxRz"
+      type="small"
+    >
+      <h1
+        class="Header__StyledHeader-sc-42wb12-2 egjaic"
+      >
+        TIMECODE TRACKER
+      </h1>
+      <div
+        class="Header__ActionWrapper-sc-42wb12-3 bpFiNn"
+      >
+        <button
+          class="Header__Circle-sc-42wb12-5 cbzzXT"
+        >
+          <svg>
+            cross-white.svg
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`renders correctly a small type header 1`] = `
+<DocumentFragment>
+  <div
+    class="Header__Wrapper-sc-42wb12-0 kIEjuF"
+    type="small"
+  >
+    <div
+      class="Header__Top-sc-42wb12-1 hMdxRz"
+      type="small"
+    >
+      <h1
+        class="Header__StyledHeader-sc-42wb12-2 egjaic"
+      >
+        TIMECODE TRACKER
+      </h1>
+      <div
+        class="Header__ActionWrapper-sc-42wb12-3 bpFiNn"
+      >
+        <a
+          href="/settings"
+        >
+          <button
+            class="Header__Circle-sc-42wb12-5 cbzzXT"
+          >
+            <svg>
+              settings.svg
+            </svg>
+          </button>
+        </a>
+        <a
+          href="/create"
+        >
+          <button
+            class="Header__AddPlus-sc-42wb12-6 fAopbb"
+          >
+            <svg>
+              plus-white.svg
+            </svg>
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
