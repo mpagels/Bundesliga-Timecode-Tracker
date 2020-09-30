@@ -9,10 +9,10 @@ export default function EventCard({
 }) {
   return (
     <CardWrapper>
-      <div>
+      <>
         <Event>{tag.toUpperCase()}</Event>
         <Player>{playerName.toUpperCase()}</Player>
-      </div>
+      </>
       <TimeCodes>
         <Test>
           <Text>{'bauchbinde in'.toUpperCase()}</Text>
