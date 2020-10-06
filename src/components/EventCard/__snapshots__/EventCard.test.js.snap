@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correct 1`] = `
+<DocumentFragment>
+  <section
+    class="EventCard__CardWrapper-sc-1e6mutb-0 dAKMxO"
+  >
+    <h2
+      class="EventCard__Event-sc-1e6mutb-1 iochNF"
+    >
+      TOR
+    </h2>
+    <p
+      class="EventCard__Player-sc-1e6mutb-2 liEpxs"
+    >
+      LEWANDOWSKI
+    </p>
+    <div
+      class="EventCard__TimeCodes-sc-1e6mutb-3 kosKgD"
+    >
+      <div
+        class="EventCard__Test-sc-1e6mutb-6 hqxBn"
+      >
+        <h3
+          class="EventCard__Text-sc-1e6mutb-4 eAEPat"
+        >
+          BAUCHBINDE IN
+        </h3>
+        <p
+          class="EventCard__TimeCode-sc-1e6mutb-5 dIKwuf"
+        >
+          00:03:10:00
+        </p>
+      </div>
+      <div
+        class="EventCard__Test-sc-1e6mutb-6 hqxBn"
+      >
+        <h3
+          class="EventCard__Text-sc-1e6mutb-4 eAEPat"
+        >
+          BAUCHBINDE OUT
+        </h3>
+        <p
+          class="EventCard__TimeCode-sc-1e6mutb-5 dIKwuf"
+        >
+          00:03:18:00
+        </p>
+      </div>
+    </div>
+  </section>
+</DocumentFragment>
+`;

@@ -1,27 +1,35 @@
 import React from 'react'
 import styled from 'styled-components/macro'
+import PropTypes from 'prop-types'
 import { ReactComponent as Cross } from '../../assets/cross-white.svg'
 import { ReactComponent as Settings } from '../../assets/settings.svg'
 import { ReactComponent as Plus } from '../../assets/plus-white.svg'
 import TimeCodeBubble from '../TimeCodeBubble/TimeCodeBubble'
 import { Link, useHistory } from 'react-router-dom'
 
+Header.propTypes = {
+  title: PropTypes.string,
+  type: PropTypes.string,
+  hasCloseButton: PropTypes.bool,
+  totalLength: PropTypes.string,
+  duration: PropTypes.string,
+}
+
 export default function Header({
-  title,
+  title = "timecode tracker",
   type,
-  isCloseButton,
+  hasCloseButton,
   totalLength,
   duration,
-  onCircleClick,
 }) {
   const history = useHistory()
 
   return (
     <Wrapper type={type}>
       <Top type={type}>
-        <StyledHeader>{title}</StyledHeader>
+        <StyledHeader>{title.toUpperCase()}</StyledHeader>
         <ActionWrapper>
-          {isCloseButton ? (
+          {hasCloseButton ? (
             <Circle onClick={() => history.goBack()}>
               <Cross />
             </Circle>
@@ -44,9 +52,9 @@ export default function Header({
 
       {type === 'big' && (
         <BubbleWrapper>
-          <TimeCodeBubble title="GESAMTLÄNGE" timeCode={totalLength} />
+          <TimeCodeBubble title="Gesamtlänge" timeCode={totalLength} />
           <TimeCodeBubble
-            title="VORGABE"
+            title="Vorgabe"
             timeCode={duration}
             isMinOnly={true}
           />

@@ -1,0 +1,155 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly a small type header 1`] = `
+<DocumentFragment>
+  <nav
+    class="NavBar__NavWrapper-jwnntt-0 LDDlK"
+  >
+    <ul>
+      <li>
+        <a
+          href="/"
+        >
+          <p>
+            1ST
+          </p>
+          <span>
+            00:01:21:00
+          </span>
+        </a>
+        <div
+          class="NavBar__ActiveBar-jwnntt-1 fyAIhG"
+        />
+      </li>
+      <li>
+        <a
+          href="/2nd"
+        >
+          <p>
+            2ND
+          </p>
+          <span>
+            00:01:15:00
+          </span>
+        </a>
+      </li>
+      <li>
+        <a
+          href="/interview"
+        >
+          <p>
+            INTERVIEW
+          </p>
+          <span>
+            00:01:15:00
+          </span>
+        </a>
+      </li>
+      <li>
+        <a
+          href="/special"
+        >
+          <div
+            class="NavBar__SpecialWrapper-jwnntt-2 rvtLy"
+          >
+            <div
+              class="NavBar__SpecialCouter-jwnntt-3 lcCauh"
+            >
+              3
+            </div>
+            <p>
+              SPECIALS
+            </p>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a
+          href="/info"
+        >
+          <p>
+            INFO
+          </p>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</DocumentFragment>
+`;
+
+exports[`renders correctly the NavBar 1`] = `
+<DocumentFragment>
+  <nav
+    class="NavBar__NavWrapper-jwnntt-0 LDDlK"
+  >
+    <ul>
+      <li>
+        <a
+          href="/"
+        >
+          <p>
+            1ST
+          </p>
+          <span>
+            00:01:21:00
+          </span>
+        </a>
+        <div
+          class="NavBar__ActiveBar-jwnntt-1 fyAIhG"
+        />
+      </li>
+      <li>
+        <a
+          href="/2nd"
+        >
+          <p>
+            2ND
+          </p>
+          <span>
+            00:01:15:00
+          </span>
+        </a>
+      </li>
+      <li>
+        <a
+          href="/interview"
+        >
+          <p>
+            INTERVIEW
+          </p>
+          <span>
+            00:01:15:00
+          </span>
+        </a>
+      </li>
+      <li>
+        <a
+          href="/special"
+        >
+          <div
+            class="NavBar__SpecialWrapper-jwnntt-2 rvtLy"
+          >
+            <div
+              class="NavBar__SpecialCouter-jwnntt-3 lcCauh"
+            >
+              3
+            </div>
+            <p>
+              SPECIALS
+            </p>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a
+          href="/info"
+        >
+          <p>
+            INFO
+          </p>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</DocumentFragment>
+`;

@@ -1,9 +1,10 @@
 import React from 'react'
 import styled from 'styled-components/macro'
+
 export default function TimeCodeBubble({ title, timeCode, isMinOnly = false }) {
   return (
     <BubbleWrapper>
-      <ForWhat>{title}</ForWhat>
+      <ForWhat>{title.toUpperCase()}</ForWhat>
       <TimeCode>
         {timeCode}
         {isMinOnly && 'min'}

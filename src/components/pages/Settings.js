@@ -11,14 +11,14 @@ import {
 } from '../../utils/localStorage'
 
 export default function Settings({ onClick, handleSummerySave }) {
-  const [summaryLength, setSummaryLength] = useState('')
+  const [targetLength, setTargetLength] = useState('')
   const [hasError, setHasError] = useState(false)
   const history = useHistory()
-  const isActive = summaryLength.length > 0
+  const isActive = targetLength.length > 0
 
   useEffect(() => {
-    const summaryLength = loadFromLocalStorage('summaryLength')
-    summaryLength && setSummaryLength(summaryLength)
+    const targetLength = loadFromLocalStorage('targetLength')
+    targetLength && setTargetLength(targetLength)
   }, [])
 
   return (
@@ -26,9 +26,9 @@ export default function Settings({ onClick, handleSummerySave }) {
       <TimecodeInput
         title="SPIELBERICHT LÄNGE"
         onBackSpace={preventCursorJumpToEnd}
-        inputValue={formatter(summaryLength)}
+        inputValue={formatter(targetLength)}
         placeholder="MM:SS"
-        onChange={(event) => handleTimeCodeChange(event, setSummaryLength)}
+        onChange={(event) => handleTimeCodeChange(event, setTargetLength)}
       />
       <ValidationError errorMessage="Timecode fehlerhaft" hasError={hasError} />
       <ActionWrapper>
@@ -42,8 +42,8 @@ export default function Settings({ onClick, handleSummerySave }) {
     </PageWrapper>
   )
 
-  function validateSummaryLength() {
-    return summaryLength.length % 2 !== 0 && summaryLength !== ''
+  function validatetargetLength() {
+    return targetLength.length % 2 !== 0 && targetLength !== ''
   }
 
   function handleTimeCodeChange(event, timeCodeSetterFunc) {
@@ -62,11 +62,11 @@ export default function Settings({ onClick, handleSummerySave }) {
   }
 
   function handleSave() {
-    if (summaryLength.length === 4) {
-      handleSummerySave(summaryLength)
-      saveToLocalStorage('summaryLength', summaryLength)
+    if (targetLength.length === 4) {
+      handleSummerySave(targetLength)
+      saveToLocalStorage('targetLength', targetLength)
       history.push('/')
-    } else if (validateSummaryLength()) {
+    } else if (validatetargetLength()) {
       setHasError(true)
     }
   }

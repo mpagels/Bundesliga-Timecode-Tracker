@@ -1,7 +1,15 @@
 import React from 'react'
 import styled from 'styled-components/macro'
+import PropTypes from 'prop-types'
 import { getTimecodeTotalLengthFromSequenceCards } from '../../utils/Timecode'
 import { Link, useLocation } from 'react-router-dom'
+
+NavBar.propTypes = {
+  firstHalfTimeCode: PropTypes.array,
+  secondHalfTimeCode: PropTypes.array,
+  interviewTimeCode: PropTypes.array,
+  countSpecials: PropTypes.number,
+}
 
 export default function NavBar({
   firstHalfTimeCode,
